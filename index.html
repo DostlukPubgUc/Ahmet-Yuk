@@ -17,97 +17,57 @@
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            margin: 0; 
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .app { width: 100%; max-width: 450px; }
+        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 15px; }
+        .app { width: 100%; max-width: 450px; margin: 0 auto; }
 
         /* Header */
         .header { display: flex; justify-content: space-between; align-items: center; margin: 10px 0 25px; }
         .brand { font-size: 26px; font-weight: 800; color: var(--blue); letter-spacing: -1px; }
-        .clock { font-family: 'JetBrains Mono'; font-size: 14px; color: var(--text-dim); }
 
-        /* Stats Section */
+        /* Stats */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .card { 
-            background: var(--surface); 
-            padding: 20px; 
-            border-radius: 24px; 
-            border-left: 4px solid var(--blue);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-        }
+        .card { background: var(--surface); padding: 20px; border-radius: 24px; border-left: 4px solid var(--blue); }
         .card.p { border-color: var(--green); }
         .card.d { border-color: var(--red); }
-        .card span { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+        .card span { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; }
         .card div { font-family: 'JetBrains Mono'; font-size: 22px; margin-top: 5px; }
 
         /* Form */
-        .form-box { 
-            background: var(--surface); 
-            padding: 24px; 
-            border-radius: 30px; 
-            margin-bottom: 30px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
+        .form-box { background: var(--surface); padding: 24px; border-radius: 30px; margin-bottom: 20px; }
         input { 
-            width: 100%; 
-            background: #1c1c1f; 
-            border: 1px solid #27272a; 
-            border-radius: 16px; 
-            padding: 18px; 
-            color: white; 
-            font-size: 16px; 
-            margin-bottom: 12px; 
-            outline: none;
-            transition: 0.3s;
+            width: 100%; background: #1c1c1f; border: 1px solid #27272a; border-radius: 16px; 
+            padding: 18px; color: white; font-size: 16px; margin-bottom: 12px; outline: none;
         }
-        input:focus { border-color: var(--blue); box-shadow: 0 0 15px rgba(0,229,255,0.1); }
-        
         .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        
         .btn { 
-            width: 100%; 
-            padding: 20px; 
-            border-radius: 18px; 
-            background: var(--blue); 
-            color: #000; 
-            font-weight: 800; 
-            border: none; 
-            cursor: pointer; 
-            font-size: 15px;
-            text-transform: uppercase;
-            box-shadow: 0 5px 15px rgba(0,229,255,0.3);
+            width: 100%; padding: 20px; border-radius: 18px; background: var(--blue); 
+            color: #000; font-weight: 800; border: none; cursor: pointer; font-size: 15px; text-transform: uppercase;
         }
-        .btn:active { transform: scale(0.96); }
 
-        /* List Section */
-        .list-label { font-size: 12px; font-weight: 800; color: var(--text-dim); margin-bottom: 15px; padding-left: 5px; }
-        
+        /* Menyu düwmesi */
+        .menu-btn {
+            width: 100%; padding: 18px; border-radius: 18px; background: #1c1c1f;
+            color: var(--text); border: 1px solid #27272a; font-weight: 600; cursor: pointer;
+            margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+
+        /* Modal (Menyu) */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 100; display: none; padding: 20px;
+            overflow-y: auto;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .close-btn { background: var(--surface); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; }
+
         .item { 
-            background: var(--surface); 
-            padding: 20px; 
-            border-radius: 24px; 
-            margin-bottom: 12px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            border: 1px solid rgba(255,255,255,0.03);
+            background: var(--surface); padding: 20px; border-radius: 24px; margin-bottom: 12px; 
+            display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03);
         }
-        .item b { font-size: 18px; display: block; margin-bottom: 2px; }
-        .item small { color: var(--text-dim); font-size: 11px; }
-
+        .item b { font-size: 17px; display: block; }
         .item-val { text-align: right; }
         .val-main { font-family: 'JetBrains Mono'; font-size: 18px; font-weight: 700; }
-        .val-sub { font-size: 10px; font-weight: 700; text-transform: uppercase; margin-top: 2px; }
-
-        .empty { text-align: center; color: #333; margin-top: 50px; font-weight: 600; }
+        .val-sub { font-size: 10px; font-weight: 700; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -115,18 +75,12 @@
 <div class="app">
     <div class="header">
         <div class="brand">AMAN PRO</div>
-        <div class="clock" id="clock">00:00:00</div>
+        <div id="clock" style="color: var(--text-dim); font-size: 14px;">00:00:00</div>
     </div>
 
     <div class="grid">
-        <div class="card p">
-            <span>Töleg (+)</span>
-            <div id="t-p" style="color: var(--green);">0.00</div>
-        </div>
-        <div class="card d">
-            <span>Bergi (-)</span>
-            <div id="t-d" style="color: var(--red);">0.00</div>
-        </div>
+        <div class="card p"><span>Töleg (+)</span><div id="t-p" style="color: var(--green);">0.00</div></div>
+        <div class="card d"><span>Bergi (-)</span><div id="t-d" style="color: var(--red);">0.00</div></div>
     </div>
 
     <div class="form-box">
@@ -135,83 +89,90 @@
             <input type="number" id="pay" placeholder="Töleg (+)">
             <input type="number" id="debt" placeholder="Bergi (-)">
         </div>
-        <button class="btn" onclick="add()">HASABY TÄZELE</button>
+        <button class="btn" onclick="add()">Hasaby Täzele</button>
     </div>
 
-    <div class="list-label">MÜŞDERI SANAWY</div>
-    <div id="list"></div>
+    <button class="menu-btn" onclick="toggleModal(true)">
+        📋 MÜŞDERILER SANAWY
+    </button>
+</div>
 
+<!-- Müşderiler Menýusy (Modal) -->
+<div id="customerModal" class="modal">
+    <div class="modal-header">
+        <div class="brand">MÜŞDERILER</div>
+        <button class="close-btn" onclick="toggleModal(false)">ÝAP</button>
+    </div>
+    <div id="list"></div>
     <center>
         <button onclick="reset()" style="background:none; border:none; color:#222; margin-top:40px; font-size:10px;">Maglumatlary Poz</button>
     </center>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('aman_v4')) || [];
+    let db = JSON.parse(localStorage.getItem('aman_v5')) || [];
+
+    function toggleModal(show) {
+        document.getElementById('customerModal').style.display = show ? 'block' : 'none';
+        if(show) render();
+    }
 
     function add() {
-        const nInput = document.getElementById('name');
-        const pInput = document.getElementById('pay');
-        const dInput = document.getElementById('debt');
-
-        const name = nInput.value.trim();
-        const pay = parseFloat(pInput.value) || 0;
-        const debt = parseFloat(dInput.value) || 0;
+        const nInput = document.getElementById('name'), pInput = document.getElementById('pay'), dInput = document.getElementById('debt');
+        const name = nInput.value.trim(), pay = parseFloat(pInput.value) || 0, debt = parseFloat(dInput.value) || 0;
 
         if(!name) return;
 
         let user = db.find(u => u.name.toLowerCase() === name.toLowerCase());
-
         if(user) {
-            user.p += pay;
-            user.d += debt;
+            user.p += pay; user.d += debt;
             db = [user, ...db.filter(u => u !== user)];
         } else {
             db.unshift({ name: name, p: pay, d: debt });
         }
 
-        localStorage.setItem('aman_v4', JSON.stringify(db));
+        localStorage.setItem('aman_v5', JSON.stringify(db));
         nInput.value = ""; pInput.value = ""; dInput.value = "";
-        render();
+        updateStats();
+        alert("Maglumat saklandy!");
+    }
+
+    function updateStats() {
+        let tp = 0, td = 0;
+        db.forEach(u => { tp += u.p; td += u.d; });
+        document.getElementById('t-p').innerText = tp.toFixed(2);
+        document.getElementById('t-d').innerText = td.toFixed(2);
     }
 
     function render() {
         const list = document.getElementById('list');
-        let totalP = 0, totalD = 0;
-        list.innerHTML = "";
-
-        if(db.length === 0) {
-            list.innerHTML = '<div class="empty">Heniz müşderi ýok</div>';
-        }
-
+        list.innerHTML = db.length === 0 ? '<div style="text-align:center; color:#333; margin-top:50px;">Sanaw boş</div>' : "";
+        
         db.forEach(u => {
-            totalP += u.p;
-            totalD += u.d;
-            
-            const net = u.p - u.d; // Netije: Beren pulundan bergini aýyrýar
+            const net = u.p - u.d;
             const color = net >= 0 ? 'var(--green)' : 'var(--red)';
-            const label = net >= 0 ? 'Galyndy' : 'Bergi';
-
             list.innerHTML += `
-                <div class="item" onclick="document.getElementById('name').value='${u.name}'">
+                <div class="item" onclick="selectUser('${u.name}')">
                     <div>
                         <b>${u.name}</b>
-                        <small>Jemi beren: ${u.p.toFixed(2)}</small>
+                        <small style="color:var(--text-dim); font-size:11px;">T: ${u.p.toFixed(2)} | B: ${u.d.toFixed(2)}</small>
                     </div>
                     <div class="item-val">
                         <div class="val-main" style="color: ${color}">${net.toFixed(2)}</div>
-                        <div class="val-sub" style="color: ${color}">${label}</div>
+                        <div class="val-sub" style="color: ${color}">${net >= 0 ? 'Galyndy' : 'Bergi'}</div>
                     </div>
                 </div>`;
         });
-
-        document.getElementById('t-p').innerText = totalP.toFixed(2);
-        document.getElementById('t-debt' ? 't-d' : 't-d').innerText = totalD.toFixed(2);
     }
 
-    function reset() { if(confirm("Pozulsynmy?")) { localStorage.clear(); location.reload(); } }
+    function selectUser(n) {
+        document.getElementById('name').value = n;
+        toggleModal(false);
+    }
+
+    function reset() { if(confirm("Hemmesini pozmalymy?")) { localStorage.clear(); location.reload(); } }
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
-    render();
+    updateStats();
 </script>
 
 </body>

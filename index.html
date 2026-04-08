@@ -9,177 +9,239 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --bg: #050505; --surf: #121214; --green: #00ffa3; --red: #ff3d71; --blue: #00e5ff; --text: #ffffff; --dim: #a1a1aa; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 15px; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 15px; overflow-x: hidden; }
         .app { width: 100%; max-width: 450px; margin: 0 auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .brand { font-size: 24px; font-weight: 800; color: var(--blue); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .card { background: var(--surf); padding: 15px; border-radius: 20px; border-left: 3px solid var(--blue); }
-        .form-box { background: var(--surf); padding: 20px; border-radius: 25px; margin-bottom: 15px; }
-        input { width: 100%; background: #1c1c1f; border: 1px solid #27272a; border-radius: 14px; padding: 15px; color: white; margin-bottom: 10px; outline: none; }
-        .btn { width: 100%; padding: 18px; border-radius: 15px; background: var(--blue); color: #000; font-weight: 800; border: none; cursor: pointer; }
+        .brand { font-size: 24px; font-weight: 800; color: var(--blue); letter-spacing: -0.5px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .card { background: var(--surf); padding: 18px; border-radius: 22px; border-left: 4px solid var(--blue); }
+        .form-box { background: var(--surf); padding: 22px; border-radius: 28px; margin-bottom: 20px; }
+        input { width: 100%; background: #1c1c1f; border: 1px solid #27272a; border-radius: 16px; padding: 16px; color: white; margin-bottom: 12px; font-size: 15px; }
+        .btn { width: 100%; padding: 20px; border-radius: 18px; background: var(--blue); color: #000; font-weight: 800; border: none; cursor: pointer; font-size: 15px; text-transform: uppercase; }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 100; display: none; padding: 20px; overflow-y: auto; }
-        .item { background: var(--surf); padding: 12px; border-radius: 18px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
-        .mic-btn { width: 100%; padding: 12px; border-radius: 12px; background: #1c1c1f; color: var(--text); border: 1px solid #27272a; margin-bottom: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .item { background: var(--surf); padding: 14px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03); }
+        .mic-btn { width: 100%; padding: 14px; border-radius: 14px; background: #1c1c1f; color: var(--text); border: 1px solid #27272a; margin-bottom: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; }
         .mic-active { color: var(--red); border-color: var(--red); animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        .user-img { width: 45px; height: 45px; border-radius: 50%; background: #222; overflow: hidden; border: 2px solid var(--blue); }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+        .user-img { width: 50px; height: 50px; border-radius: 50%; background: #222; overflow: hidden; border: 2px solid var(--blue); cursor: pointer; flex-shrink: 0; }
         .user-img img { width: 100%; height: 100%; object-fit: cover; }
-        #lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        #qrcode { background: white; padding: 10px; border-radius: 10px; display: inline-block; margin-top: 15px; }
+        #lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        #qrcode { background: white; padding: 15px; border-radius: 15px; display: inline-block; margin-top: 15px; }
+        .tool-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .tool-btn { background: #1c1c1f; border: 1px solid #27272a; color: var(--dim); padding: 10px; border-radius: 12px; font-size: 10px; font-weight: 800; cursor: pointer; }
     </style>
 </head>
 <body>
 
+<!-- Lock Screen -->
 <div id="lock-screen">
-    <div id="lock-title" class="brand" style="margin-bottom: 20px;">AMAN PRO</div>
-    <input type="password" id="pin-input" placeholder="PIN KOD" style="width: 200px; text-align: center; font-size: 20px;">
-    <button class="btn" onclick="handleLock()" style="width: 200px;">GIRMEK</button>
+    <div id="lock-title" class="brand" style="margin-bottom: 25px;">AMAN PRO</div>
+    <input type="password" id="pin-input" placeholder="PIN KOD" style="width: 220px; text-align: center; font-size: 22px; letter-spacing: 4px;">
+    <button class="btn" onclick="handleLock()" style="width: 220px;">GIRMEK</button>
 </div>
 
 <div class="app">
     <div class="header">
         <div class="brand">AMAN PRO</div>
-        <div id="clock" style="color: var(--dim); font-size: 12px;">00:00:00</div>
+        <div id="clock" style="color: var(--dim); font-size: 13px; font-family: 'JetBrains Mono';">00:00:00</div>
     </div>
 
     <div class="grid">
-        <div class="card" style="border-color: var(--green);"><span>Töleg</span><div id="t-p" style="color: var(--green);">0.00</div></div>
-        <div class="card" style="border-color: var(--red);"><span>Bergi</span><div id="t-d" style="color: var(--red);">0.00</div></div>
+        <div class="card" style="border-color: var(--green);">
+            <span style="font-size: 11px; color: var(--dim); font-weight: 600;">TÖLEG</span>
+            <div id="t-p" style="color: var(--green); font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono';">0.00</div>
+        </div>
+        <div class="card" style="border-color: var(--red);">
+            <span style="font-size: 11px; color: var(--dim); font-weight: 600;">BERGI</span>
+            <div id="t-d" style="color: var(--red); font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono';">0.00</div>
+        </div>
     </div>
 
     <div class="form-box">
         <button id="mic-main" class="mic-btn" onclick="toggleMic()">🎤 Sesli buýruk ber</button>
-        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+        <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 12px;">
             <div class="user-img" onclick="document.getElementById('imgIn').click()">
-                <img id="prev-img" src="">
+                <img id="prev-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E">
             </div>
             <input type="text" id="name" placeholder="Müşderiniň ady" style="margin:0;">
         </div>
-        <input type="file" id="imgIn" style="display:none" onchange="previewImg(event)">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <input type="file" id="imgIn" style="display:none" accept="image/*" onchange="previewImg(event)">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
             <input type="number" id="pay" placeholder="Töleg (+)">
             <input type="number" id="debt" placeholder="Bergi (-)">
         </div>
         <button class="btn" onclick="add()">HASABY TÄZELE</button>
     </div>
 
-    <button class="btn" style="background:#1c1c1f; color:white;" onclick="toggleModal('customerModal')">📋 SANAW WE ARAŞŞALYK</button>
+    <button class="btn" style="background:#1c1c1f; color:white; border:1px solid #27272a;" onclick="toggleModal('customerModal')">📋 MAGLUMATLAR</button>
 </div>
 
-<!-- Modal Sanaw -->
+<!-- Modal Maglumatlar -->
 <div id="customerModal" class="modal">
-    <div class="header"><div class="brand">SANAW</div><button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800;">ÝAP</button></div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 15px;">
-        <button class="btn" style="padding:10px; font-size:10px;" onclick="downloadPDF()">PDF</button>
-        <button class="btn" style="padding:10px; font-size:10px;" onclick="exportData()">BACKUP</button>
-        <button class="btn" style="padding:10px; font-size:10px;" onclick="document.getElementById('fIn').click()">IMPORT</button>
+    <div class="header">
+        <div class="brand">MAGLUMATLAR</div>
+        <button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800; cursor:pointer;">ÝAP</button>
+    </div>
+    
+    <div class="tool-bar">
+        <button class="tool-btn" onclick="downloadPDF()">📄 PDF</button>
+        <button class="tool-btn" onclick="exportData()">💾 BACKUP</button>
+        <button class="tool-btn" onclick="document.getElementById('fIn').click()">📂 IMPORT</button>
     </div>
     <input type="file" id="fIn" style="display:none" onchange="importData(event)">
-    <input type="text" id="search" placeholder="Gözle..." oninput="render()">
+
+    <input type="text" id="search" placeholder="Müşderi gözle..." oninput="render()">
     <div id="list"></div>
 </div>
 
-<!-- Modal Jikme-jiklik -->
+<!-- Modal Details -->
 <div id="detailsModal" class="modal">
-    <div class="header"><div id="det-name" class="brand">...</div><button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800;">YZA</button></div>
+    <div class="header">
+        <div id="det-name" class="brand">...</div>
+        <button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800; cursor:pointer;">YZA</button>
+    </div>
     <center>
         <div id="qrcode"></div>
-        <p style="font-size:10px; color:var(--dim); margin-top:5px;">TÖLEG QR KODY</p>
+        <p style="font-size:11px; color:var(--dim); margin-top:8px; font-weight:600;">TÖLEG QR KODY</p>
     </center>
-    <div id="det-history" style="margin-top:20px;"></div>
+    <div id="det-history" style="margin-top:25px;"></div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('aman_v10_db')) || [];
+    let db = JSON.parse(localStorage.getItem('aman_v11_db')) || [];
     let savedPin = localStorage.getItem('aman_pin');
     let recognition;
     let currentImg = "";
 
-    if(!savedPin) document.getElementById('lock-title').innerText = "TÄZE PIN";
+    // PIN Verification
+    if(!savedPin) { document.getElementById('lock-title').innerText = "TÄZE PIN"; }
 
     function handleLock() {
         const pin = document.getElementById('pin-input').value;
-        if(!savedPin) { localStorage.setItem('aman_pin', pin); location.reload(); }
-        else if(pin === savedPin) document.getElementById('lock-screen').style.display='none';
-        else alert("Ýalňyş!");
+        if(!savedPin) { 
+            if(pin.length < 1) return;
+            localStorage.setItem('aman_pin', pin); 
+            location.reload(); 
+        } else if(pin === savedPin) {
+            document.getElementById('lock-screen').style.display='none';
+        } else {
+            alert("Parol ýalňyş!");
+            document.getElementById('pin-input').value = "";
+        }
     }
 
+    // Voice Response
     function speak(text) {
         const msg = new SpeechSynthesisUtterance(text);
         msg.lang = 'tr-TR';
         window.speechSynthesis.speak(msg);
     }
 
+    // Image Preview
     function previewImg(e) {
+        const file = e.target.files[0];
+        if(!file) return;
         const reader = new FileReader();
-        reader.onload = () => { currentImg = reader.result; document.getElementById('prev-img').src = currentImg; };
-        reader.readAsDataURL(e.target.files[0]);
-    }
-
-    function toggleMic() {
-        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'tr-TR';
-        recognition.onstart = () => { document.getElementById('mic-main').classList.add('mic-active'); document.getElementById('mic-main').innerText = "🛑 Diňleýärin..."; };
-        recognition.onend = () => { document.getElementById('mic-main').classList.remove('mic-active'); document.getElementById('mic-main').innerText = "🎤 Sesli buýruk ber"; };
-        recognition.onresult = (e) => {
-            const res = e.results[0][0].transcript.split(" ");
-            document.getElementById('name').value = res[0];
-            if(res[1]) document.getElementById('pay').value = res[1].replace(/[^0-9]/g, '');
+        reader.onload = () => { 
+            currentImg = reader.result; 
+            document.getElementById('prev-img').src = currentImg; 
         };
-        recognition.start();
+        reader.readAsDataURL(file);
     }
 
+    // Voice Commands
+    function toggleMic() {
+        try {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'tr-TR';
+            recognition.onstart = () => { 
+                document.getElementById('mic-main').classList.add('mic-active'); 
+                document.getElementById('mic-main').innerText = "🛑 Diňleýärin..."; 
+            };
+            recognition.onend = () => { 
+                document.getElementById('mic-main').classList.remove('mic-active'); 
+                document.getElementById('mic-main').innerText = "🎤 Sesli buýruk ber"; 
+            };
+            recognition.onresult = (e) => {
+                const res = e.results[0][0].transcript.split(" ");
+                if(res[0]) document.getElementById('name').value = res[0].charAt(0).toUpperCase() + res[0].slice(1);
+                if(res[1]) document.getElementById('pay').value = res[1].replace(/[^0-9]/g, '');
+            };
+            recognition.start();
+        } catch(e) { alert("Sesli ýazgy goldalmaýar."); }
+    }
+
+    // Add Record
     function add() {
-        const n = document.getElementById('name').value.trim();
-        const p = parseFloat(document.getElementById('pay').value) || 0;
-        const d = parseFloat(document.getElementById('debt').value) || 0;
+        const nameInput = document.getElementById('name');
+        const payInput = document.getElementById('pay');
+        const debtInput = document.getElementById('debt');
+        const n = nameInput.value.trim();
+        const p = parseFloat(payInput.value) || 0;
+        const d = parseFloat(debtInput.value) || 0;
+
         if(!n) return;
 
         let u = db.find(x => x.name.toLowerCase() === n.toLowerCase());
-        const log = { t: new Date().toLocaleString(), p, d };
+        const now = new Date();
+        const time = `${now.getDate()}.${now.getMonth()+1}.${now.getFullYear()} | ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+        const log = { t: time, p, d };
 
         if(u) {
             u.p += p; u.d += d; u.logs.unshift(log);
             if(currentImg) u.img = currentImg;
+            db = [u, ...db.filter(x => x !== u)];
         } else {
             db.unshift({ name: n, p, d, img: currentImg, logs: [log] });
         }
         
-        localStorage.setItem('aman_v10_db', JSON.stringify(db));
+        localStorage.setItem('aman_v11_db', JSON.stringify(db));
         speak("Boldy Aman, hasap täzelendi.");
-        document.getElementById('name').value = ""; document.getElementById('pay').value = ""; document.getElementById('debt').value = "";
-        document.getElementById('prev-img').src = ""; currentImg = "";
+        
+        // Reset
+        nameInput.value = ""; payInput.value = ""; debtInput.value = "";
+        document.getElementById('prev-img').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+        currentImg = "";
         updateStats();
     }
 
+    // List Rendering (Auto-Archive logic)
     function render() {
         const list = document.getElementById('list');
+        const query = document.getElementById('search').value.toLowerCase();
         list.innerHTML = "";
-        // Arhiw logic: Bergisi 0 bolanlar aşaga geçýär
-        const sorted = [...db].sort((a,b) => (a.p-a.d === 0) ? 1 : -1);
+        
+        const filtered = db.filter(u => u.name.toLowerCase().includes(query));
+        const sorted = [...filtered].sort((a,b) => (a.p-a.d === 0) ? 1 : -1);
         
         sorted.forEach(u => {
             const net = u.p - u.d;
             list.innerHTML += `<div class="item" onclick="showDetails('${u.name}')">
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <div class="user-img"><img src="${u.img || ''}"></div>
-                    <b>${u.name} ${net===0 ? '(Arhiw)' : ''}</b>
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <div class="user-img"><img src="${u.img || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"}"></div>
+                    <div>
+                        <b style="font-size:16px;">${u.name}</b>
+                        <div style="font-size:10px; color:var(--dim);">${net===0 ? 'ARHIW' : 'IŞJEŇ'}</div>
+                    </div>
                 </div>
-                <b style="color:${net>=0?'var(--green)':'var(--red)'}">${net.toFixed(2)}</b>
+                <b style="color:${net>=0?'var(--green)':'var(--red)'}; font-family:'JetBrains Mono'; font-size:17px;">${net.toFixed(2)}</b>
             </div>`;
         });
     }
 
+    // Show User Details
     function showDetails(n) {
         const u = db.find(x => x.name === n);
         document.getElementById('det-name').innerText = u.name;
         document.getElementById('qrcode').innerHTML = "";
-        new QRCode(document.getElementById("qrcode"), { text: `Toleg: ${u.name} - ${(u.p-u.d).toFixed(2)} TMT`, width: 128, height: 128 });
+        new QRCode(document.getElementById("qrcode"), { 
+            text: `AMAN PRO TÖLEG: ${u.name} - ${(u.p-u.d).toFixed(2)} TMT`, 
+            width: 140, height: 140, colorDark: "#000000", colorLight: "#ffffff" 
+        });
         
         let h = "";
-        u.logs.forEach(l => h += `<div style="font-size:11px; border-bottom:1px solid #222; padding:5px; display:flex; justify-content:space-between;"><span>${l.t}</span><span>+${l.p} / -${l.d}</span></div>`);
+        u.logs.forEach(l => h += `<div style="font-size:12px; border-bottom:1px solid #222; padding:8px; display:flex; justify-content:space-between; font-family:'JetBrains Mono';"><span>${l.t}</span><span style="color:${l.p>0?'var(--green)':'var(--red)'}">+${l.p} / -${l.d}</span></div>`);
         document.getElementById('det-history').innerHTML = h;
         toggleModal('detailsModal');
     }
@@ -196,23 +258,34 @@
     function exportData() {
         const a = document.createElement('a');
         a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-        a.download = "aman_final_backup.json"; a.click();
+        a.download = "aman_pro_backup.json"; a.click();
     }
 
     function importData(e) {
         const r = new FileReader();
-        r.onload = (v) => { db = JSON.parse(v.target.result); localStorage.setItem('aman_v10_db', JSON.stringify(db)); updateStats(); alert("OK!"); };
+        r.onload = (v) => { 
+            db = JSON.parse(v.target.result); 
+            localStorage.setItem('aman_v11_db', JSON.stringify(db)); 
+            updateStats(); 
+            alert("Maglumatlar üstünlikli ýüklendi!"); 
+        };
         r.readAsText(e.target.files[0]);
     }
 
     function downloadPDF() {
-        const { jsPDF } = window.jspdf; const doc = new jsPDF();
-        doc.text("AMAN PRO HASABAT", 10, 10);
+        const { jsPDF } = window.jspdf; 
+        const doc = new jsPDF();
+        doc.text("AMAN PRO - UMUMY HASABAT", 10, 10);
         db.forEach((u, i) => doc.text(`${u.name}: ${(u.p-u.d).toFixed(2)} TMT`, 10, 20+(i*10)));
         doc.save("hasabat.pdf");
     }
 
-    setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
+    // Real-time Clock
+    setInterval(() => {
+        const n = new Date();
+        document.getElementById('clock').innerText = n.getHours().toString().padStart(2,'0')+":"+n.getMinutes().toString().padStart(2,'0')+":"+n.getSeconds().toString().padStart(2,'0');
+    }, 1000);
+    
     updateStats();
 </script>
 </body>

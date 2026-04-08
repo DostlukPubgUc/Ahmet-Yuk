@@ -20,11 +20,9 @@
         body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 15px; }
         .app { width: 100%; max-width: 450px; margin: 0 auto; }
 
-        /* Header */
         .header { display: flex; justify-content: space-between; align-items: center; margin: 10px 0 25px; }
         .brand { font-size: 26px; font-weight: 800; color: var(--blue); letter-spacing: -1px; }
 
-        /* Stats */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .card { background: var(--surface); padding: 20px; border-radius: 24px; border-left: 4px solid var(--blue); }
         .card.p { border-color: var(--green); }
@@ -32,7 +30,6 @@
         .card span { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; }
         .card div { font-family: 'JetBrains Mono'; font-size: 22px; margin-top: 5px; }
 
-        /* Form */
         .form-box { background: var(--surface); padding: 24px; border-radius: 30px; margin-bottom: 20px; }
         input { 
             width: 100%; background: #1c1c1f; border: 1px solid #27272a; border-radius: 16px; 
@@ -44,27 +41,25 @@
             color: #000; font-weight: 800; border: none; cursor: pointer; font-size: 15px; text-transform: uppercase;
         }
 
-        /* Menyu düwmesi */
         .menu-btn {
             width: 100%; padding: 18px; border-radius: 18px; background: #1c1c1f;
             color: var(--text); border: 1px solid #27272a; font-weight: 600; cursor: pointer;
             margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;
         }
 
-        /* Modal (Menyu) */
         .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg); z-index: 100; display: none; padding: 20px;
             overflow-y: auto;
         }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .close-btn { background: var(--surface); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; }
+        .modal-header { margin-bottom: 25px; padding-top: 10px; }
 
         .item { 
             background: var(--surface); padding: 20px; border-radius: 24px; margin-bottom: 12px; 
             display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03);
         }
-        .item b { font-size: 17px; display: block; }
+        .item b { font-size: 18px; display: block; margin-bottom: 4px; }
+        .date-info { color: var(--text-dim); font-size: 10px; font-family: 'JetBrains Mono'; font-weight: 500; }
         .item-val { text-align: right; }
         .val-main { font-family: 'JetBrains Mono'; font-size: 18px; font-weight: 700; }
         .val-sub { font-size: 10px; font-weight: 700; text-transform: uppercase; }
@@ -97,24 +92,29 @@
     </button>
 </div>
 
-<!-- Müşderiler Menýusy (Modal) -->
 <div id="customerModal" class="modal">
     <div class="modal-header">
         <div class="brand">MÜŞDERILER</div>
-        <button class="close-btn" onclick="toggleModal(false)">ÝAP</button>
     </div>
     <div id="list"></div>
-    <center>
-        <button onclick="reset()" style="background:none; border:none; color:#222; margin-top:40px; font-size:10px;">Maglumatlary Poz</button>
-    </center>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('aman_v5')) || [];
+    let db = JSON.parse(localStorage.getItem('aman_v6')) || [];
+
+    // Telefonuň yza düwmesini dolandyrmak
+    window.onpopstate = function() {
+        document.getElementById('customerModal').style.display = 'none';
+    };
 
     function toggleModal(show) {
-        document.getElementById('customerModal').style.display = show ? 'block' : 'none';
-        if(show) render();
+        if(show) {
+            history.pushState({page: 1}, "Müşderiler", "");
+            document.getElementById('customerModal').style.display = 'block';
+            render();
+        } else {
+            document.getElementById('customerModal').style.display = 'none';
+        }
     }
 
     function add() {
@@ -123,18 +123,28 @@
 
         if(!name) return;
 
+        // Häzirki wagty alýas
+        const now = new Date();
+        const timeStr = now.getDate().toString().padStart(2, '0') + "." + 
+                        (now.getMonth()+1).toString().padStart(2, '0') + "." + 
+                        now.getFullYear() + " | " + 
+                        now.getHours().toString().padStart(2, '0') + ":" + 
+                        now.getMinutes().toString().padStart(2, '0');
+
         let user = db.find(u => u.name.toLowerCase() === name.toLowerCase());
         if(user) {
-            user.p += pay; user.d += debt;
+            user.p += pay; 
+            user.d += debt;
+            user.date = timeStr; // Wagty täzeleýäris
             db = [user, ...db.filter(u => u !== user)];
         } else {
-            db.unshift({ name: name, p: pay, d: debt });
+            db.unshift({ name: name, p: pay, d: debt, date: timeStr });
         }
 
-        localStorage.setItem('aman_v5', JSON.stringify(db));
+        localStorage.setItem('aman_v6', JSON.stringify(db));
         nInput.value = ""; pInput.value = ""; dInput.value = "";
         updateStats();
-        alert("Maglumat saklandy!");
+        alert("Üstünlikli täzelendi!");
     }
 
     function updateStats() {
@@ -155,7 +165,8 @@
                 <div class="item" onclick="selectUser('${u.name}')">
                     <div>
                         <b>${u.name}</b>
-                        <small style="color:var(--text-dim); font-size:11px;">T: ${u.p.toFixed(2)} | B: ${u.d.toFixed(2)}</small>
+                        <div class="date-info">${u.date || '--.--.----'}</div>
+                        <small style="color:var(--text-dim); font-size:11px; display:block; margin-top:5px;">T: ${u.p.toFixed(2)} | B: ${u.d.toFixed(2)}</small>
                     </div>
                     <div class="item-val">
                         <div class="val-main" style="color: ${color}">${net.toFixed(2)}</div>
@@ -167,10 +178,9 @@
 
     function selectUser(n) {
         document.getElementById('name').value = n;
-        toggleModal(false);
+        history.back(); // Bu awtomatik modal penjiräni ýapar
     }
 
-    function reset() { if(confirm("Hemmesini pozmalymy?")) { localStorage.clear(); location.reload(); } }
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
     updateStats();
 </script>

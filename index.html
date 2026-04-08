@@ -3,46 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AMAN PRO AI v14</title>
+    <title>AMAN PRO v15</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --bg: #050505; --surf: #121214; --green: #00ffa3; --red: #ff3d71; --blue: #00e5ff; --text: #ffffff; --dim: #a1a1aa; --orange: #ffab00; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 15px; opacity: 0; animation: fadeInBody 0.8s forwards; }
-        @keyframes fadeInBody { from { opacity: 0; } to { opacity: 1; } }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; transition: all 0.2s ease; }
+        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 15px; overflow-x: hidden; }
         .app { width: 100%; max-width: 450px; margin: 0 auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; animation: slideDown 0.5s ease; }
-        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .brand { font-size: 24px; font-weight: 800; color: var(--blue); letter-spacing: -0.5px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .brand { font-size: 24px; font-weight: 800; color: var(--blue); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .card { background: var(--surf); padding: 18px; border-radius: 22px; border-left: 4px solid var(--blue); animation: cardIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
-        .card:nth-child(2) { animation-delay: 0.1s; border-color: var(--red); }
-        @keyframes cardIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .form-box { background: var(--surf); padding: 22px; border-radius: 28px; margin-bottom: 20px; animation: slideUp 0.6s 0.2s backwards; }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        input { width: 100%; background: #1c1c1f; border: 1px solid #27272a; border-radius: 16px; padding: 16px; color: white; margin-bottom: 12px; font-size: 15px; }
-        .btn { width: 100%; padding: 18px; border-radius: 18px; background: var(--blue); color: #000; font-weight: 800; border: none; cursor: pointer; position: relative; overflow: hidden; }
+        .card { background: var(--surf); padding: 20px; border-radius: 22px; border-left: 4px solid var(--blue); position: relative; overflow: hidden; }
+        .card:nth-child(2) { border-color: var(--red); }
+        .form-box { background: var(--surf); padding: 22px; border-radius: 28px; margin-bottom: 20px; }
+        input { width: 100%; background: #1c1c1f; border: 1px solid #27272a; border-radius: 16px; padding: 16px; color: white; margin-bottom: 12px; font-size: 16px; }
+        .btn { width: 100%; padding: 20px; border-radius: 18px; background: var(--blue); color: #000; font-weight: 800; border: none; cursor: pointer; font-size: 15px; }
         .btn:active { transform: scale(0.96); }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 100; display: none; padding: 20px; overflow-y: auto; animation: modalPop 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes modalPop { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .item { background: var(--surf); padding: 14px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03); animation: itemSlide 0.4s backwards; }
-        @keyframes itemSlide { from { transform: translateX(-30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .mic-btn { width: 100%; padding: 14px; border-radius: 14px; background: #1c1c1f; color: var(--text); border: 1px solid #27272a; margin-bottom: 15px; font-weight: 700; cursor: pointer; }
-        .mic-active { color: var(--red); border-color: var(--red); box-shadow: 0 0 20px rgba(255, 61, 113, 0.3); animation: pulse 1s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.98); } }
-        .user-img { width: 50px; height: 50px; border-radius: 50%; background: #222; overflow: hidden; border: 2px solid var(--blue); flex-shrink: 0; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 100; display: none; padding: 20px; overflow-y: auto; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .item { background: var(--surf); padding: 14px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03); }
+        .mic-btn { width: 100%; padding: 14px; border-radius: 14px; background: #1c1c1f; color: var(--text); border: 1px solid #27272a; margin-bottom: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .mic-active { color: var(--red); border-color: var(--red); box-shadow: 0 0 15px rgba(255, 61, 113, 0.2); }
+        .user-img { width: 55px; height: 55px; border-radius: 50%; background: #222; overflow: hidden; border: 2px solid var(--blue); flex-shrink: 0; cursor: pointer; }
         .user-img img { width: 100%; height: 100%; object-fit: cover; }
         #lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        #qrcode { background: white; padding: 15px; border-radius: 20px; }
+        #qrcode { background: white; padding: 10px; border-radius: 15px; margin-top: 15px; }
+        .tool-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+        .tool-btn { background: #1c1c1f; border: 1px solid #27272a; color: white; padding: 12px; border-radius: 14px; font-size: 11px; font-weight: 800; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="lock-screen">
     <div class="brand" style="margin-bottom: 25px; font-size: 32px;">AMAN PRO</div>
-    <input type="password" id="pin-input" placeholder="PIN">
+    <input type="password" id="pin-input" placeholder="PIN" style="width: 180px; text-align: center; font-size: 25px; letter-spacing: 5px;">
     <button class="btn" onclick="handleLock()" style="width: 180px;">GIRMEK</button>
 </div>
 
@@ -54,12 +50,12 @@
 
     <div class="grid">
         <div class="card">
-            <span style="font-size: 11px; color: var(--dim);">TÖLEG</span>
-            <div id="t-p" style="color: var(--green); font-size: 24px; font-weight: 800;">0.00</div>
+            <span style="font-size: 12px; color: var(--dim);">TÖLEG</span>
+            <div id="t-p" style="color: var(--green); font-size: 26px; font-weight: 800; margin-top: 5px;">0.00</div>
         </div>
         <div class="card">
-            <span style="font-size: 11px; color: var(--dim);">BERGI</span>
-            <div id="t-d" style="color: var(--red); font-size: 24px; font-weight: 800;">0.00</div>
+            <span style="font-size: 12px; color: var(--dim);">BERGI</span>
+            <div id="t-d" style="color: var(--red); font-size: 26px; font-weight: 800; margin-top: 5px;">0.00</div>
         </div>
     </div>
 
@@ -82,23 +78,36 @@
     <button class="btn" style="background:#1c1c1f; color:white; border:1px solid #27272a;" onclick="toggleModal('customerModal')">📋 MAGLUMATLAR</button>
 </div>
 
+<!-- Maglumatlar Modaly -->
 <div id="customerModal" class="modal">
     <div class="header">
         <div class="brand">MAGLUMATLAR</div>
-        <button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800;">ÝAP</button>
+        <button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800; cursor:pointer;">ÝAP</button>
     </div>
+    
+    <div class="tool-bar">
+        <button class="tool-btn" onclick="downloadPDF()">📄 PDF</button>
+        <button class="tool-btn" onclick="exportData()">💾 BACKUP</button>
+        <button class="tool-btn" onclick="document.getElementById('fIn').click()">📂 IMPORT</button>
+    </div>
+    <input type="file" id="fIn" style="display:none" onchange="importData(event)">
+    
     <input type="text" id="search" placeholder="Gözle..." oninput="render()">
     <div id="list"></div>
 </div>
 
+<!-- Details Modaly -->
 <div id="detailsModal" class="modal">
-    <div class="header"><div id="det-name" class="brand">...</div><button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800;">YZA</button></div>
+    <div class="header">
+        <div id="det-name" class="brand">...</div>
+        <button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800; cursor:pointer;">YZA</button>
+    </div>
     <center><div id="qrcode"></div></center>
-    <div id="det-history" style="margin-top:20px;"></div>
+    <div id="det-history" style="margin-top:25px;"></div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('aman_v14_db')) || [];
+    let db = JSON.parse(localStorage.getItem('aman_v15_db')) || [];
     let savedPin = localStorage.getItem('aman_pin');
     let currentImg = "";
 
@@ -106,38 +115,41 @@
         const pin = document.getElementById('pin-input').value;
         if(!savedPin) { localStorage.setItem('aman_pin', pin); location.reload(); }
         else if(pin === savedPin) document.getElementById('lock-screen').style.display='none';
-        else alert("Ýalňyş PIN!");
-    }
-
-    function getDynamicColor(val) {
-        if(val <= 0) return 'var(--green)';
-        if(val <= 100) return '#cddc39'; // Açyk sary
-        if(val <= 500) return 'var(--orange)';
-        return 'var(--red)';
+        else { alert("Ýalňyş PIN!"); document.getElementById('pin-input').value=""; }
     }
 
     function toggleMic() {
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'tr-TR';
         recognition.onstart = () => document.getElementById('mic-main').classList.add('mic-active');
-        recognition.onend = () => document.getElementById('mic-main').classList.remove('mic-active');
+        
         recognition.onresult = (e) => {
             const text = e.results[0][0].transcript.toLowerCase();
             const words = text.split(" ");
             const amount = text.match(/\d+/);
             
-            document.getElementById('name').value = words[0];
+            document.getElementById('name').value = words[0].charAt(0).toUpperCase() + words[0].slice(1);
             if(amount) {
-                if(text.includes("berdi") || text.includes("töledi")) {
+                if(text.includes("berdi") || text.includes("töledi") || text.includes("plus")) {
                     document.getElementById('pay').value = amount[0];
-                } else if(text.includes("aldy") || text.includes("bergi")) {
+                    document.getElementById('debt').value = "";
+                } else if(text.includes("aldy") || text.includes("minus")) {
                     document.getElementById('debt').value = amount[0];
-                } else {
-                    document.getElementById('pay').value = amount[0];
+                    document.getElementById('pay').value = "";
                 }
             }
+            recognition.stop(); // Söz biten badyna öçürýär
         };
+
+        recognition.onend = () => document.getElementById('mic-main').classList.remove('mic-active');
         recognition.start();
+    }
+
+    function getDynamicColor(val) {
+        if(val <= 0) return 'var(--green)';
+        if(val <= 100) return '#cddc39';
+        if(val <= 500) return 'var(--orange)';
+        return 'var(--red)';
     }
 
     function add() {
@@ -147,7 +159,8 @@
         if(!n) return;
 
         let u = db.find(x => x.name.toLowerCase() === n.toLowerCase());
-        const log = { t: new Date().toLocaleString(), p, d };
+        const time = new Date().toLocaleString();
+        const log = { t: time, p, d };
 
         if(u) {
             u.p += p; u.d += d; u.logs.unshift(log);
@@ -157,14 +170,15 @@
             db.unshift({ name: n, p, d, img: currentImg, logs: [log] });
         }
         
-        localStorage.setItem('aman_v14_db', JSON.stringify(db));
+        localStorage.setItem('aman_v15_db', JSON.stringify(db));
         updateStats();
-        const utter = new SpeechSynthesisUtterance("Boldy");
-        utter.lang = 'tr-TR'; window.speechSynthesis.speak(utter);
         
         document.getElementById('name').value = ""; document.getElementById('pay').value = ""; document.getElementById('debt').value = "";
         document.getElementById('prev-img').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
         currentImg = "";
+        
+        const utter = new SpeechSynthesisUtterance("Boldy");
+        utter.lang = 'tr-TR'; window.speechSynthesis.speak(utter);
     }
 
     function render() {
@@ -172,15 +186,15 @@
         list.innerHTML = "";
         const query = document.getElementById('search').value.toLowerCase();
         
-        db.filter(u => u.name.toLowerCase().includes(query)).forEach((u, i) => {
-            const net = u.d - u.p; // Jemi bergi
+        db.filter(u => u.name.toLowerCase().includes(query)).forEach(u => {
+            const net = u.d - u.p;
             const dynamicColor = getDynamicColor(net);
-            list.innerHTML += `<div class="item" style="animation-delay:${i*0.05}s" onclick="showDetails('${u.name}')">
+            list.innerHTML += `<div class="item" onclick="showDetails('${u.name}')">
                 <div style="display:flex; gap:12px; align-items:center;">
                     <div class="user-img" style="border-color:${dynamicColor}"><img src="${u.img || ''}"></div>
                     <b>${u.name}</b>
                 </div>
-                <b style="color:${dynamicColor}">${(u.p - u.d).toFixed(2)}</b>
+                <b style="color:${dynamicColor}; font-family:'JetBrains Mono'">${(u.p - u.d).toFixed(2)}</b>
             </div>`;
         });
     }
@@ -189,42 +203,48 @@
         const u = db.find(x => x.name === n);
         document.getElementById('det-name').innerText = u.name;
         document.getElementById('qrcode').innerHTML = "";
-        new QRCode(document.getElementById("qrcode"), { text: `Toleg: ${u.name} - ${(u.p-u.d).toFixed(2)}`, width: 120, height: 120 });
+        new QRCode(document.getElementById("qrcode"), { text: `AMAN PRO: ${u.name} | ${(u.p-u.d).toFixed(2)} TMT`, width: 130, height: 130 });
         
         let h = "";
-        u.logs.forEach(l => h += `<div style="font-size:11px; border-bottom:1px solid #222; padding:8px; display:flex; justify-content:space-between;"><span>${l.t}</span><span>+${l.p} / -${l.d}</span></div>`);
+        u.logs.forEach(l => h += `<div style="font-size:12px; border-bottom:1px solid #222; padding:10px; display:flex; justify-content:space-between;"><span>${l.t}</span><span style="color:${l.p>0?'var(--green)':'var(--red)'}">+${l.p} / -${l.d}</span></div>`);
         document.getElementById('det-history').innerHTML = h;
         toggleModal('detailsModal');
     }
 
     function updateStats() {
-        let oldP = parseFloat(document.getElementById('t-p').innerText) || 0;
-        let oldD = parseFloat(document.getElementById('t-d').innerText) || 0;
-        let newP = 0, newD = 0;
-        db.forEach(u => { newP += u.p; newD += u.d; });
-        animateValue("t-p", oldP, newP, 800);
-        animateValue("t-d", oldD, newD, 800);
-    }
-
-    function animateValue(id, start, end, duration) {
-        const obj = document.getElementById(id);
-        let startTimestamp = null;
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            obj.innerHTML = (progress * (end - start) + start).toFixed(2);
-            if (progress < 1) window.requestAnimationFrame(step);
-        };
-        window.requestAnimationFrame(step);
+        let tp=0, td=0; db.forEach(u => { tp+=u.p; td+=u.d; });
+        document.getElementById('t-p').innerText = tp.toFixed(2);
+        document.getElementById('t-d').innerText = td.toFixed(2);
     }
 
     function toggleModal(id) { history.pushState({p:1}, "", ""); document.getElementById(id).style.display = 'block'; if(id==='customerModal') render(); }
     window.onpopstate = () => document.querySelectorAll('.modal').forEach(m => m.style.display='none');
+
     function previewImg(e) {
         const reader = new FileReader();
         reader.onload = () => { currentImg = reader.result; document.getElementById('prev-img').src = currentImg; };
         reader.readAsDataURL(e.target.files[0]);
     }
+
+    function downloadPDF() {
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        doc.text("AMAN PRO - HASABAT", 10, 10);
+        db.forEach((u, i) => doc.text(`${u.name}: ${(u.p-u.d).toFixed(2)} TMT`, 10, 20+(i*10)));
+        doc.save("hasabat.pdf");
+    }
+
+    function exportData() {
+        const a = document.createElement('a');
+        a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+        a.download = "aman_backup.json"; a.click();
+    }
+
+    function importData(e) {
+        const r = new FileReader();
+        r.onload = (v) => { db = JSON.parse(v.target.result); localStorage.setItem('aman_v15_db', JSON.stringify(db)); updateStats(); alert("OK!"); };
+        r.readAsText(e.target.files[0]);
+    }
+
     setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
     updateStats();
 </script>

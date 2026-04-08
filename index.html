@@ -3,214 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AMAN LEDGER PRO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>AMAN PRO MAX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #000000;
-            --card: #1c1c1e;
-            --accent: #0a84ff;
-            --green: #32d74b;
-            --red: #ff453a;
+            --bg: #050505;
+            --surface: #121214;
+            --green: #00ffa3;
+            --red: #ff3d71;
+            --blue: #00e5ff;
             --text: #ffffff;
-            --text-secondary: #8e8e93;
+            --text-dim: #a1a1aa;
         }
 
-        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
-            background-color: var(--bg); 
+            background: var(--bg); 
             color: var(--text); 
-            font-family: 'Inter', sans-serif; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
             margin: 0; 
-            padding: 20px;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
         }
 
-        .container { max-width: 400px; margin: 0 auto; }
+        .app { width: 100%; max-width: 450px; }
 
         /* Header */
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 0 5px; }
-        .logo { font-weight: 700; font-size: 22px; letter-spacing: -0.5px; color: var(--text); }
-        .time { color: var(--text-secondary); font-size: 14px; font-weight: 500; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin: 10px 0 25px; }
+        .brand { font-size: 26px; font-weight: 800; color: var(--blue); letter-spacing: -1px; }
+        .clock { font-family: 'JetBrains Mono'; font-size: 14px; color: var(--text-dim); }
 
-        /* Top Cards */
-        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .summary-card { background: var(--card); padding: 16px; border-radius: 18px; }
-        .summary-card span { color: var(--text-secondary); font-size: 11px; font-weight: 600; text-transform: uppercase; }
-        .summary-card div { font-size: 18px; font-weight: 700; margin-top: 5px; }
+        /* Stats Section */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .card { 
+            background: var(--surface); 
+            padding: 20px; 
+            border-radius: 24px; 
+            border-left: 4px solid var(--blue);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        .card.p { border-color: var(--green); }
+        .card.d { border-color: var(--red); }
+        .card span { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+        .card div { font-family: 'JetBrains Mono'; font-size: 22px; margin-top: 5px; }
 
-        /* Input Panel */
-        .input-panel { background: var(--card); padding: 20px; border-radius: 24px; margin-bottom: 30px; }
+        /* Form */
+        .form-box { 
+            background: var(--surface); 
+            padding: 24px; 
+            border-radius: 30px; 
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
         input { 
             width: 100%; 
-            background: #2c2c2e; 
-            border: none; 
-            border-radius: 12px; 
-            padding: 14px; 
+            background: #1c1c1f; 
+            border: 1px solid #27272a; 
+            border-radius: 16px; 
+            padding: 18px; 
             color: white; 
             font-size: 16px; 
-            margin-bottom: 12px;
-            font-family: inherit;
+            margin-bottom: 12px; 
+            outline: none;
+            transition: 0.3s;
         }
-        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        input:focus { border-color: var(--blue); box-shadow: 0 0 15px rgba(0,229,255,0.1); }
         
-        .btn-add { 
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .btn { 
             width: 100%; 
-            background: var(--text); 
-            color: black; 
+            padding: 20px; 
+            border-radius: 18px; 
+            background: var(--blue); 
+            color: #000; 
+            font-weight: 800; 
             border: none; 
-            padding: 16px; 
-            border-radius: 14px; 
-            font-weight: 600; 
-            font-size: 15px; 
             cursor: pointer; 
-            margin-top: 5px;
+            font-size: 15px;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(0,229,255,0.3);
         }
-        .btn-add:active { transform: scale(0.98); opacity: 0.9; }
+        .btn:active { transform: scale(0.96); }
 
-        /* Customer List */
-        .section-title { font-size: 13px; color: var(--text-secondary); font-weight: 600; margin-bottom: 15px; padding-left: 5px; }
+        /* List Section */
+        .list-label { font-size: 12px; font-weight: 800; color: var(--text-dim); margin-bottom: 15px; padding-left: 5px; }
         
-        .customer-card { 
-            background: var(--card); 
-            padding: 16px; 
-            border-radius: 20px; 
-            margin-bottom: 10px; 
+        .item { 
+            background: var(--surface); 
+            padding: 20px; 
+            border-radius: 24px; 
+            margin-bottom: 12px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center;
+            border: 1px solid rgba(255,255,255,0.03);
         }
-        .customer-info b { font-size: 16px; display: block; margin-bottom: 2px; }
-        .customer-info small { color: var(--text-secondary); font-size: 11px; }
+        .item b { font-size: 18px; display: block; margin-bottom: 2px; }
+        .item small { color: var(--text-dim); font-size: 11px; }
 
-        .balance-info { text-align: right; }
-        .bal-total { font-size: 17px; font-weight: 700; }
-        .bal-sub { font-size: 11px; font-weight: 500; opacity: 0.8; }
+        .item-val { text-align: right; }
+        .val-main { font-family: 'JetBrains Mono'; font-size: 18px; font-weight: 700; }
+        .val-sub { font-size: 10px; font-weight: 700; text-transform: uppercase; margin-top: 2px; }
 
-        .empty-state { text-align: center; color: var(--text-secondary); font-size: 14px; margin-top: 40px; }
+        .empty { text-align: center; color: #333; margin-top: 50px; font-weight: 600; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <div class="logo">AMAN</div>
-        <div class="time" id="clock">16:00</div>
-    </header>
+<div class="app">
+    <div class="header">
+        <div class="brand">AMAN PRO</div>
+        <div class="clock" id="clock">00:00:00</div>
+    </div>
 
-    <div class="summary-grid">
-        <div class="summary-card">
-            <span>Jemi Töleg</span>
-            <div id="total-p" style="color: var(--green);">0.00</div>
+    <div class="grid">
+        <div class="card p">
+            <span>Töleg (+)</span>
+            <div id="t-p" style="color: var(--green);">0.00</div>
         </div>
-        <div class="summary-card">
-            <span>Jemi Bergi</span>
-            <div id="total-d" style="color: var(--red);">0.00</div>
+        <div class="card d">
+            <span>Bergi (-)</span>
+            <div id="t-d" style="color: var(--red);">0.00</div>
         </div>
     </div>
 
-    <div class="input-panel">
+    <div class="form-box">
         <input type="text" id="name" placeholder="Müşderiniň ady" autocomplete="off">
-        <div class="input-row">
+        <div class="row">
             <input type="number" id="pay" placeholder="Töleg (+)">
             <input type="number" id="debt" placeholder="Bergi (-)">
         </div>
-        <button class="btn-add" onclick="process()">HASABY TÄZELE</button>
+        <button class="btn" onclick="add()">HASABY TÄZELE</button>
     </div>
 
-    <div class="section-title">MÜŞDERI SANAWY</div>
-    <div id="list">
-        <!-- Sanaw bura düşer -->
-    </div>
+    <div class="list-label">MÜŞDERI SANAWY</div>
+    <div id="list"></div>
 
-    <button onclick="clearAll()" style="background:none; border:none; color:#2c2c2e; width:100%; margin-top:40px; font-size:11px;">Maglumatlary arassala</button>
+    <center>
+        <button onclick="reset()" style="background:none; border:none; color:#222; margin-top:40px; font-size:10px;">Maglumatlary Poz</button>
+    </center>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('aman_pro_ledger')) || [];
+    let db = JSON.parse(localStorage.getItem('aman_v4')) || [];
 
-    function process() {
-        const n = document.getElementById('name').value.trim();
-        const p = parseFloat(document.getElementById('pay').value) || 0;
-        const d = parseFloat(document.getElementById('debt').value) || 0;
+    function add() {
+        const nInput = document.getElementById('name');
+        const pInput = document.getElementById('pay');
+        const dInput = document.getElementById('debt');
 
-        if(!n) return;
+        const name = nInput.value.trim();
+        const pay = parseFloat(pInput.value) || 0;
+        const debt = parseFloat(dInput.value) || 0;
 
-        let user = db.find(u => u.name.toLowerCase() === n.toLowerCase());
+        if(!name) return;
+
+        let user = db.find(u => u.name.toLowerCase() === name.toLowerCase());
 
         if(user) {
-            user.p += p;
-            user.d += d;
-            // Täze amaly iň ýokary çykarmak
+            user.p += pay;
+            user.d += debt;
             db = [user, ...db.filter(u => u !== user)];
         } else {
-            db.unshift({ name: n, p: p, d: d });
+            db.unshift({ name: name, p: pay, d: debt });
         }
 
-        localStorage.setItem('aman_pro_ledger', JSON.stringify(db));
-        
-        document.getElementById('name').value = "";
-        document.getElementById('pay').value = "";
-        document.getElementById('debt').value = "";
-        
+        localStorage.setItem('aman_v4', JSON.stringify(db));
+        nInput.value = ""; pInput.value = ""; dInput.value = "";
         render();
     }
 
     function render() {
-        const listDiv = document.getElementById('list');
-        let sumP = 0, sumD = 0;
-        
+        const list = document.getElementById('list');
+        let totalP = 0, totalD = 0;
+        list.innerHTML = "";
+
         if(db.length === 0) {
-            listDiv.innerHTML = '<div class="empty-state">Heniz müşderi ýok</div>';
-            document.getElementById('total-p').innerText = "0.00";
-            document.getElementById('total-d').innerText = "0.00";
-            return;
+            list.innerHTML = '<div class="empty">Heniz müşderi ýok</div>';
         }
 
-        listDiv.innerHTML = "";
         db.forEach(u => {
-            sumP += u.p;
-            sumD += u.d;
+            totalP += u.p;
+            totalD += u.d;
             
-            // Netije hasaplamasy: Töleg - Bergi
-            const net = u.p - u.d;
-            const netColor = net >= 0 ? 'var(--green)' : 'var(--red)';
-            const netSign = net > 0 ? '+' : '';
+            const net = u.p - u.d; // Netije: Beren pulundan bergini aýyrýar
+            const color = net >= 0 ? 'var(--green)' : 'var(--red)';
+            const label = net >= 0 ? 'Galyndy' : 'Bergi';
 
-            listDiv.innerHTML += `
-                <div class="customer-card" onclick="fill('${u.name}')">
-                    <div class="customer-info">
+            list.innerHTML += `
+                <div class="item" onclick="document.getElementById('name').value='${u.name}'">
+                    <div>
                         <b>${u.name}</b>
-                        <small>Töleg: ${u.p.toFixed(2)} | Bergi: ${u.d.toFixed(2)}</small>
+                        <small>Jemi beren: ${u.p.toFixed(2)}</small>
                     </div>
-                    <div class="balance-info">
-                        <div class="bal-total" style="color: ${netColor}">${netSign}${net.toFixed(2)}</div>
-                        <div class="bal-sub" style="color: ${netColor}">${net >= 0 ? 'Galyndy' : 'Bergi'}</div>
+                    <div class="item-val">
+                        <div class="val-main" style="color: ${color}">${net.toFixed(2)}</div>
+                        <div class="val-sub" style="color: ${color}">${label}</div>
                     </div>
-                </div>
-            `;
+                </div>`;
         });
 
-        document.getElementById('total-p').innerText = sumP.toFixed(2);
-        document.getElementById('total-d').innerText = sumD.toFixed(2);
+        document.getElementById('t-p').innerText = totalP.toFixed(2);
+        document.getElementById('t-debt' ? 't-d' : 't-d').innerText = totalD.toFixed(2);
     }
 
-    function fill(n) { document.getElementById('name').value = n; }
-
-    function clearAll() { 
-        if(confirm("Ähli maglumatlar öçürilsinmi?")) { 
-            localStorage.clear(); 
-            location.reload(); 
-        } 
-    }
-
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('clock').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-    }
-
-    setInterval(updateClock, 1000);
-    updateClock();
+    function reset() { if(confirm("Pozulsynmy?")) { localStorage.clear(); location.reload(); } }
+    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
     render();
 </script>
+
 </body>
 </html>

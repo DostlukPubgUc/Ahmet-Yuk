@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AHMET | Business Ledger v3.0</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <title>AHMET | Ledger System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -13,42 +13,43 @@
             --green: #00ff88; --red: #ff3366; --text-main: #ffffff; --text-dim: #88888b;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; display: flex; justify-content: center; overflow: hidden; }
+        body { background: var(--bg); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; }
         
-        .app-container { width: 100%; max-width: 500px; height: 100vh; padding: 20px; display: flex; flex-direction: column; }
+        .app-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; }
         
         /* Header */
-        .main-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
+        .main-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; }
         .logo { width: 45px; height: 45px; background: linear-gradient(135deg, var(--accent), #4e00ff); border-radius: 12px; display: grid; place-items: center; font-weight: 800; font-size: 20px; box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); }
 
         /* Stats Section */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .stat-card { background: var(--surface); padding: 20px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.03); cursor: pointer; position: relative;}
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: var(--surface); padding: 20px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.03); }
         .stat-card small { color: var(--text-dim); font-size: 10px; font-weight: 700; display: block; margin-bottom: 5px; }
-        .stat-card i { position: absolute; right: 20px; top: 20px; color: var(--accent); font-size: 12px; }
 
         /* Input Panel */
-        .input-panel { background: var(--surface); padding: 25px; border-radius: 30px; margin-top: 10px; }
+        .input-panel { background: var(--surface); padding: 25px; border-radius: 30px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .form-group { position: relative; margin-bottom: 15px; }
         .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
         input { width: 100%; padding: 18px; border-radius: 15px; background: #1a1a1e; border: 1px solid #2d2d35; color: white; outline: none; font-size: 16px; }
         label { position: absolute; left: 15px; top: 18px; color: #555; transition: 0.2s; pointer-events: none; }
-        input:focus ~ label, input:not(:placeholder-shown) ~ label { top: -10px; left: 10px; font-size: 11px; color: var(--accent); background: var(--surface); padding: 0 5px; }
+        input:focus ~ label, input:not(:placeholder-shown) ~ label { top: -10px; left: 10px; font-size: 11px; color: var(--accent); background: #121215; padding: 0 5px; }
         
-        .save-btn { width: 100%; padding: 20px; border-radius: 15px; background: white; color: black; font-weight: 900; border: none; margin-top: 10px; cursor: pointer; }
+        .save-btn { width: 100%; padding: 20px; border-radius: 15px; background: white; color: black; font-weight: 900; border: none; cursor: pointer; font-size: 15px; transition: 0.2s; margin-top: 10px; }
+        .save-btn:active { transform: scale(0.97); background: #e0e0e0; }
 
-        /* Modal (Sahypa) Style */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 100; transform: translateY(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; justify-content: center; }
-        .modal.active { transform: translateY(0); }
-        .modal-content { width: 100%; max-width: 500px; padding: 20px; display: flex; flex-direction: column; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        /* Customer List (Directly Below) */
+        .history-title { display: flex; justify-content: space-between; align-items: center; margin: 10px 5px; }
+        .history-title h3 { font-size: 14px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
         
-        .ledger-list { flex: 1; overflow-y: auto; padding-bottom: 50px; }
-        .item-card { background: #161619; padding: 20px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--accent); }
-        .amt-debt.minus { color: var(--green); } /* Bergi - bolsa ýagny algy */
-        .amt-debt.plus { color: var(--red); }  /* Bergi + bolsa hakyky bergi */
+        .ledger-list { display: flex; flex-direction: column; gap: 10px; }
+        .item-card { background: #161619; padding: 18px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--accent); cursor: pointer; }
+        .item-card:active { background: #1f1f23; }
 
-        .close-btn { background: #1a1a1e; border: none; color: white; padding: 10px 20px; border-radius: 10px; cursor: pointer; }
+        .amt-pay { color: var(--green); font-family: 'JetBrains Mono'; font-weight: 600; }
+        .amt-debt { color: var(--red); font-family: 'JetBrains Mono'; font-weight: 800; }
+
+        .reset-link { color: #444; font-size: 11px; cursor: pointer; text-decoration: underline; background: none; border: none; }
     </style>
 </head>
 <body>
@@ -56,83 +57,66 @@
 <div class="app-container">
     <header class="main-header">
         <div class="logo">A</div>
-        <div class="live-clock" id="clock" style="font-family: 'JetBrains Mono'; color: var(--accent);">00:00:00</div>
+        <div id="clock" style="font-family: 'JetBrains Mono'; color: var(--accent); font-weight: bold;">00:00:00</div>
     </header>
 
-    <!-- Stats: Basanda sanaw açylýar -->
     <div class="stats-grid">
-        <div class="stat-card" onclick="openModal()">
-            <small>JEMI TÖLEG</small>
+        <div class="stat-card">
+            <small>JEMI TÖLEG (+)</small>
             <h2 id="total-pay" style="color:var(--green); font-family:'JetBrains Mono'; margin:0;">0.00 m</h2>
-            <i class="fas fa-chevron-right"></i>
         </div>
-        <div class="stat-card" onclick="openModal()">
-            <small>JEMI BERGI</small>
+        <div class="stat-card">
+            <small>JEMI BERGI (-)</small>
             <h2 id="total-debt" style="color:var(--red); font-family:'JetBrains Mono'; margin:0;">0.00 m</h2>
-            <i class="fas fa-chevron-right"></i>
         </div>
     </div>
 
     <div class="input-panel">
         <div class="form-group">
-            <input type="text" id="name" placeholder=" " autocomplete="off">
+            <input type="text" id="name" placeholder=" " autocomplete="off" list="cust-list">
             <label>Müşderiniň ady</label>
+            <datalist id="cust-list"></datalist>
         </div>
         <div class="row">
             <div class="form-group">
                 <input type="number" id="pay" placeholder=" ">
-                <label>Pul berdi (-)</label>
+                <label>Töleg (+)</label>
             </div>
             <div class="form-group">
                 <input type="number" id="debt" placeholder=" ">
-                <label>Bergi aldy (+)</label>
+                <label>Bergi (-)</label>
             </div>
         </div>
-        <button onclick="handleSave()" class="save-btn">HASABY TÄZELE</button>
+        <button type="button" id="saveAction" class="save-btn">HASABY TÄZELE</button>
     </div>
 
-    <div style="margin-top: auto; padding: 20px; text-align: center;">
-        <button onclick="openModal()" style="background: none; border: 1px solid #333; color: #777; padding: 12px 30px; border-radius: 50px; font-size: 12px; letter-spacing: 1px;">
-            <i class="fas fa-users"></i> MÜŞDERI SANAWYNY GÖR
-        </button>
+    <div class="history-title">
+        <h3>Müşderi Sanawy</h3>
+        <button onclick="clearSystem()" class="reset-link">Sistemany Nölle</button>
     </div>
-</div>
 
-<!-- Sahypa (Modal) -->
-<div id="customerModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 style="font-size: 18px;"><i class="fas fa-list-ul"></i> Ähli Müşderiler</h2>
-            <button class="close-btn" onclick="closeModal()">Ýap</button>
-        </div>
-        
-        <div class="ledger-list" id="ledger-list">
-            <!-- Müşderiler şu ýere geler -->
-        </div>
-        
-        <button onclick="clearAll()" style="color:var(--red); background:none; border:none; margin-top: 10px; font-size: 12px; cursor: pointer;">
-            Sistemany Nölle
-        </button>
+    <div class="ledger-list" id="ledger-list">
+        <!-- Sanaw şu ýere geler -->
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('AHMET_FINAL_DB')) || [];
+    let db = JSON.parse(localStorage.getItem('AHMET_FINAL_V2')) || [];
 
-    function handleSave() {
+    // Hasaby saklamak funksiýasy
+    document.getElementById('saveAction').addEventListener('click', function() {
         const name = document.getElementById('name').value.trim();
         const pay = parseFloat(document.getElementById('pay').value) || 0;
         const debt = parseFloat(document.getElementById('debt').value) || 0;
         
-        if(!name) return alert("Müşderi adyny giriziň!");
+        if(!name) { alert("Adyny giriziň!"); return; }
 
         let index = db.findIndex(c => c.name.toLowerCase() === name.toLowerCase());
         const dateStr = new Date().toLocaleString('tk-TM', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
 
         if(index !== -1) {
             db[index].totalPay += pay;
-            // Logika: täze bergi goşulýar, tölenen pul aýrylýar
-            db[index].currentDebt = (db[index].currentDebt + debt) - pay;
+            db[index].currentDebt -= debt; // Bergi aýrylýar (-)
             db[index].date = dateStr;
             const item = db.splice(index, 1)[0];
             db.unshift(item);
@@ -140,46 +124,44 @@
             db.unshift({
                 name: name,
                 totalPay: pay,
-                currentDebt: debt - pay,
+                currentDebt: -debt, // Täze müşderide bergi minus bolup başlar
                 date: dateStr
             });
         }
 
-        localStorage.setItem('AHMET_FINAL_DB', JSON.stringify(db));
+        localStorage.setItem('AHMET_FINAL_V2', JSON.stringify(db));
         render();
         
         // Inputlary arassala
         document.getElementById('name').value = "";
         document.getElementById('pay').value = "";
         document.getElementById('debt').value = "";
-        
-        alert("Üstünlikli täzelendi!");
-    }
+    });
 
     function render() {
         const list = document.getElementById('ledger-list');
+        const dl = document.getElementById('cust-list');
         let tP = 0; let tD = 0;
+        
         list.innerHTML = "";
+        dl.innerHTML = "";
 
         db.forEach(item => {
             tP += item.totalPay;
             tD += item.currentDebt;
             
-            // Reňk logikasy: Bergisi 0-dan az bolsa (algy) ýaşyl, uly bolsa gyzyl
-            const debtClass = item.currentDebt <= 0 ? "minus" : "plus";
-            const debtSign = item.currentDebt > 0 ? "+" : "";
+            // Datalist doldurmak
+            dl.innerHTML += `<option value="${item.name}">`;
 
             list.innerHTML += `
-                <div class="item-card" onclick="fillInput('${item.name}')">
+                <div class="item-card" onclick="selectUser('${item.name}')">
                     <div>
-                        <strong style="display:block; font-size:16px;">${item.name}</strong>
-                        <small style="color:#555; font-size:10px;">${item.date}</small>
+                        <strong style="display:block; font-size:15px;">${item.name}</strong>
+                        <small style="color:#444; font-size:10px;">${item.date}</small>
                     </div>
                     <div style="text-align: right;">
-                        <div style="font-size:10px; color:var(--green)">Tölegi: ${item.totalPay.toFixed(2)}</div>
-                        <div class="amt-debt ${debtClass}" style="font-weight:800; font-size:16px;">
-                            ${debtSign}${item.currentDebt.toFixed(2)} m
-                        </div>
+                        <div class="amt-pay">+${item.totalPay.toFixed(2)}</div>
+                        <div class="amt-debt">${item.currentDebt.toFixed(2)} m</div>
                     </div>
                 </div>`;
         });
@@ -187,16 +169,17 @@
         document.getElementById('total-debt').innerText = tD.toFixed(2) + " m";
     }
 
-    function fillInput(name) {
+    function selectUser(name) {
         document.getElementById('name').value = name;
-        closeModal();
-        document.getElementById('pay').focus();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function openModal() { document.getElementById('customerModal').classList.add('active'); }
-    function closeModal() { document.getElementById('customerModal').classList.remove('active'); }
-    function clearAll() { if(confirm("Ähli maglumatlar öçer. Razymy?")) { db = []; localStorage.removeItem('AHMET_FINAL_DB'); render(); } }
-    
+    function clearSystem() {
+        if(confirm("Ähli maglumatlar hemişelik pozular!")) {
+            db = []; localStorage.removeItem('AHMET_FINAL_V2'); render();
+        }
+    }
+
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
     render();
 </script>

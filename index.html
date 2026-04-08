@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AMAN PRO ULTRA</title>
+    <title>AMAN PRO FINAL</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --bg: #050505; --surf: #121214; --green: #00ffa3; --red: #ff3d71; --blue: #00e5ff; --text: #ffffff; --dim: #a1a1aa; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -19,20 +20,21 @@
         input { width: 100%; background: #1c1c1f; border: 1px solid #27272a; border-radius: 14px; padding: 15px; color: white; margin-bottom: 10px; outline: none; }
         .btn { width: 100%; padding: 18px; border-radius: 15px; background: var(--blue); color: #000; font-weight: 800; border: none; cursor: pointer; }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 100; display: none; padding: 20px; overflow-y: auto; }
-        .item { background: var(--surf); padding: 15px; border-radius: 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .mic-btn { width: 100%; padding: 15px; border-radius: 14px; background: #1c1c1f; color: var(--text); border: 1px solid #27272a; margin-bottom: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .mic-active { border-color: var(--red); color: var(--red); animation: pulse 1.5s infinite; }
+        .item { background: var(--surf); padding: 12px; border-radius: 18px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
+        .mic-btn { width: 100%; padding: 12px; border-radius: 12px; background: #1c1c1f; color: var(--text); border: 1px solid #27272a; margin-bottom: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .mic-active { color: var(--red); border-color: var(--red); animation: pulse 1s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        #lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .tool-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .tool-btn { background: #1c1c1f; border: 1px solid #27272a; color: var(--dim); padding: 8px; border-radius: 10px; font-size: 9px; font-weight: 800; }
+        .user-img { width: 45px; height: 45px; border-radius: 50%; background: #222; overflow: hidden; border: 2px solid var(--blue); }
+        .user-img img { width: 100%; height: 100%; object-fit: cover; }
+        #lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #qrcode { background: white; padding: 10px; border-radius: 10px; display: inline-block; margin-top: 15px; }
     </style>
 </head>
 <body>
 
 <div id="lock-screen">
     <div id="lock-title" class="brand" style="margin-bottom: 20px;">AMAN PRO</div>
-    <input type="password" id="pin-input" placeholder="PIN KOD" style="width: 200px; text-align: center; font-size: 20px; letter-spacing: 5px;">
+    <input type="password" id="pin-input" placeholder="PIN KOD" style="width: 200px; text-align: center; font-size: 20px;">
     <button class="btn" onclick="handleLock()" style="width: 200px;">GIRMEK</button>
 </div>
 
@@ -49,7 +51,13 @@
 
     <div class="form-box">
         <button id="mic-main" class="mic-btn" onclick="toggleMic()">🎤 Sesli buýruk ber</button>
-        <input type="text" id="name" placeholder="Müşderiniň ady" autocomplete="off">
+        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+            <div class="user-img" onclick="document.getElementById('imgIn').click()">
+                <img id="prev-img" src="">
+            </div>
+            <input type="text" id="name" placeholder="Müşderiniň ady" style="margin:0;">
+        </div>
+        <input type="file" id="imgIn" style="display:none" onchange="previewImg(event)">
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
             <input type="number" id="pay" placeholder="Töleg (+)">
             <input type="number" id="debt" placeholder="Bergi (-)">
@@ -57,114 +65,127 @@
         <button class="btn" onclick="add()">HASABY TÄZELE</button>
     </div>
 
-    <button class="btn" style="background:#1c1c1f; color:white; border:1px solid #27272a;" onclick="toggleModal('customerModal')">📋 MÜŞDERILER SANAWY</button>
+    <button class="btn" style="background:#1c1c1f; color:white;" onclick="toggleModal('customerModal')">📋 SANAW WE ARAŞŞALYK</button>
 </div>
 
+<!-- Modal Sanaw -->
 <div id="customerModal" class="modal">
     <div class="header"><div class="brand">SANAW</div><button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800;">ÝAP</button></div>
-    
-    <div class="tool-grid">
-        <button class="tool-btn" onclick="downloadPDF()">📄 PDF</button>
-        <button class="tool-btn" onclick="exportData()">💾 BACKUP</button>
-        <button class="tool-btn" onclick="document.getElementById('fileIn').click()">📂 YZA ÝÜKLE</button>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 15px;">
+        <button class="btn" style="padding:10px; font-size:10px;" onclick="downloadPDF()">PDF</button>
+        <button class="btn" style="padding:10px; font-size:10px;" onclick="exportData()">BACKUP</button>
+        <button class="btn" style="padding:10px; font-size:10px;" onclick="document.getElementById('fIn').click()">IMPORT</button>
     </div>
-    <input type="file" id="fileIn" style="display:none" onchange="importData(event)">
-
-    <input type="text" id="search" placeholder="Müşderi gözle..." oninput="render()">
-    <button id="filter-btn" onclick="toggleFilter()" style="background:#222; color:var(--red); border:none; padding:10px; border-radius:12px; margin-bottom:10px; width:100%; font-weight:700;">DIŇE BERGIDARLAR</button>
+    <input type="file" id="fIn" style="display:none" onchange="importData(event)">
+    <input type="text" id="search" placeholder="Gözle..." oninput="render()">
     <div id="list"></div>
 </div>
 
+<!-- Modal Jikme-jiklik -->
+<div id="detailsModal" class="modal">
+    <div class="header"><div id="det-name" class="brand">...</div><button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800;">YZA</button></div>
+    <center>
+        <div id="qrcode"></div>
+        <p style="font-size:10px; color:var(--dim); margin-top:5px;">TÖLEG QR KODY</p>
+    </center>
+    <div id="det-history" style="margin-top:20px;"></div>
+</div>
+
 <script>
-    let db = JSON.parse(localStorage.getItem('aman_v9_db')) || [];
+    let db = JSON.parse(localStorage.getItem('aman_v10_db')) || [];
     let savedPin = localStorage.getItem('aman_pin');
     let recognition;
-    let isRecording = false;
+    let currentImg = "";
 
-    // PIN
-    if(!savedPin) { 
-        document.getElementById('lock-title').innerText = "TÄZE PAROL"; 
-    }
+    if(!savedPin) document.getElementById('lock-title').innerText = "TÄZE PIN";
 
     function handleLock() {
-        const input = document.getElementById('pin-input').value;
-        if(!savedPin) {
-            if(input.length < 1) return;
-            localStorage.setItem('aman_pin', input);
-            location.reload();
-        } else if(input === savedPin) {
-            document.getElementById('lock-screen').style.display = 'none';
-        } else { alert('Ýalňyş!'); }
+        const pin = document.getElementById('pin-input').value;
+        if(!savedPin) { localStorage.setItem('aman_pin', pin); location.reload(); }
+        else if(pin === savedPin) document.getElementById('lock-screen').style.display='none';
+        else alert("Ýalňyş!");
     }
 
-    // Mic Logic
+    function speak(text) {
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'tr-TR';
+        window.speechSynthesis.speak(msg);
+    }
+
+    function previewImg(e) {
+        const reader = new FileReader();
+        reader.onload = () => { currentImg = reader.result; document.getElementById('prev-img').src = currentImg; };
+        reader.readAsDataURL(e.target.files[0]);
+    }
+
     function toggleMic() {
-        if (isRecording) {
-            recognition.stop();
-            return;
-        }
-        try {
-            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.lang = 'tr-TR';
-            recognition.onstart = () => {
-                isRecording = true;
-                document.getElementById('mic-main').innerHTML = "🛑 Zapis edilýär (Aýdyň)...";
-                document.getElementById('mic-main').classList.add('mic-active');
-            };
-            recognition.onend = () => {
-                isRecording = false;
-                document.getElementById('mic-main').innerHTML = "🎤 Sesli buýruk ber";
-                document.getElementById('mic-main').classList.remove('mic-active');
-            };
-            recognition.onresult = (e) => {
-                const text = e.results[0][0].transcript.toLowerCase();
-                const parts = text.split(" ");
-                if(parts[0]) document.getElementById('name').value = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-                if(parts[1]) {
-                    let val = parts[1].replace(/[^0-9]/g, '');
-                    document.getElementById('pay').value = val;
-                }
-            };
-            recognition.start();
-        } catch(e) { alert("Goldanmaýar"); }
-    }
-
-    window.onpopstate = () => { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); };
-
-    function toggleModal(id) { 
-        history.pushState({p:1}, "", ""); 
-        document.getElementById(id).style.display = 'block'; 
-        if(id === 'customerModal') render(); 
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'tr-TR';
+        recognition.onstart = () => { document.getElementById('mic-main').classList.add('mic-active'); document.getElementById('mic-main').innerText = "🛑 Diňleýärin..."; };
+        recognition.onend = () => { document.getElementById('mic-main').classList.remove('mic-active'); document.getElementById('mic-main').innerText = "🎤 Sesli buýruk ber"; };
+        recognition.onresult = (e) => {
+            const res = e.results[0][0].transcript.split(" ");
+            document.getElementById('name').value = res[0];
+            if(res[1]) document.getElementById('pay').value = res[1].replace(/[^0-9]/g, '');
+        };
+        recognition.start();
     }
 
     function add() {
-        const nI = document.getElementById('name'), pI = document.getElementById('pay'), dI = document.getElementById('debt');
-        const name = nI.value.trim(), pay = parseFloat(pI.value) || 0, debt = parseFloat(dI.value) || 0;
-        if(!name) return;
-        const now = new Date();
-        const time = `${now.getDate()}.${now.getMonth()+1}.${now.getFullYear()} | ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-        let user = db.find(u => u.name.toLowerCase() === name.toLowerCase());
-        if(user) {
-            user.p += pay; user.d += debt; user.logs.unshift({t:time, p:pay, d:debt});
-            db = [user, ...db.filter(u => u !== user)];
+        const n = document.getElementById('name').value.trim();
+        const p = parseFloat(document.getElementById('pay').value) || 0;
+        const d = parseFloat(document.getElementById('debt').value) || 0;
+        if(!n) return;
+
+        let u = db.find(x => x.name.toLowerCase() === n.toLowerCase());
+        const log = { t: new Date().toLocaleString(), p, d };
+
+        if(u) {
+            u.p += p; u.d += d; u.logs.unshift(log);
+            if(currentImg) u.img = currentImg;
         } else {
-            db.unshift({ name, p: pay, d: debt, logs: [{t:time, p:pay, d:debt}] });
+            db.unshift({ name: n, p, d, img: currentImg, logs: [log] });
         }
-        localStorage.setItem('aman_v9_db', JSON.stringify(db));
-        nI.value=""; pI.value=""; dI.value=""; updateStats();
+        
+        localStorage.setItem('aman_v10_db', JSON.stringify(db));
+        speak("Boldy Aman, hasap täzelendi.");
+        document.getElementById('name').value = ""; document.getElementById('pay').value = ""; document.getElementById('debt').value = "";
+        document.getElementById('prev-img').src = ""; currentImg = "";
+        updateStats();
     }
 
     function render() {
-        const list = document.getElementById('list'), query = document.getElementById('search').value.toLowerCase();
+        const list = document.getElementById('list');
         list.innerHTML = "";
-        db.filter(u => u.name.toLowerCase().includes(query)).forEach(u => {
+        // Arhiw logic: Bergisi 0 bolanlar aşaga geçýär
+        const sorted = [...db].sort((a,b) => (a.p-a.d === 0) ? 1 : -1);
+        
+        sorted.forEach(u => {
             const net = u.p - u.d;
-            list.innerHTML += `<div class="item">
-                <div><b>${u.name}</b></div>
-                <div style="color:${net>=0?'var(--green)':'var(--red)'}; font-weight:800;">${net.toFixed(2)}</div>
+            list.innerHTML += `<div class="item" onclick="showDetails('${u.name}')">
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <div class="user-img"><img src="${u.img || ''}"></div>
+                    <b>${u.name} ${net===0 ? '(Arhiw)' : ''}</b>
+                </div>
+                <b style="color:${net>=0?'var(--green)':'var(--red)'}">${net.toFixed(2)}</b>
             </div>`;
         });
     }
+
+    function showDetails(n) {
+        const u = db.find(x => x.name === n);
+        document.getElementById('det-name').innerText = u.name;
+        document.getElementById('qrcode').innerHTML = "";
+        new QRCode(document.getElementById("qrcode"), { text: `Toleg: ${u.name} - ${(u.p-u.d).toFixed(2)} TMT`, width: 128, height: 128 });
+        
+        let h = "";
+        u.logs.forEach(l => h += `<div style="font-size:11px; border-bottom:1px solid #222; padding:5px; display:flex; justify-content:space-between;"><span>${l.t}</span><span>+${l.p} / -${l.d}</span></div>`);
+        document.getElementById('det-history').innerHTML = h;
+        toggleModal('detailsModal');
+    }
+
+    function toggleModal(id) { history.pushState({p:1}, "", ""); document.getElementById(id).style.display = 'block'; if(id==='customerModal') render(); }
+    window.onpopstate = () => document.querySelectorAll('.modal').forEach(m => m.style.display='none');
 
     function updateStats() {
         let tp=0, td=0; db.forEach(u => { tp+=u.p; td+=u.d; });
@@ -175,26 +196,23 @@
     function exportData() {
         const a = document.createElement('a');
         a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-        a.download = "aman_pro_data.json"; a.click();
+        a.download = "aman_final_backup.json"; a.click();
     }
 
     function importData(e) {
         const r = new FileReader();
-        r.onload = (v) => { db = JSON.parse(v.target.result); localStorage.setItem('aman_v9_db', JSON.stringify(db)); updateStats(); alert("Ýüklendi!"); };
+        r.onload = (v) => { db = JSON.parse(v.target.result); localStorage.setItem('aman_v10_db', JSON.stringify(db)); updateStats(); alert("OK!"); };
         r.readAsText(e.target.files[0]);
     }
 
     function downloadPDF() {
         const { jsPDF } = window.jspdf; const doc = new jsPDF();
-        doc.text("AMAN PRO HASABATY", 10, 10);
-        db.forEach((u, i) => doc.text(`${u.name}: ${(u.p-u.d).toFixed(2)} TMT`, 10, 20 + (i*10)));
+        doc.text("AMAN PRO HASABAT", 10, 10);
+        db.forEach((u, i) => doc.text(`${u.name}: ${(u.p-u.d).toFixed(2)} TMT`, 10, 20+(i*10)));
         doc.save("hasabat.pdf");
     }
 
-    setInterval(() => {
-        const n = new Date();
-        document.getElementById('clock').innerText = n.toLocaleTimeString();
-    }, 1000);
+    setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
     updateStats();
 </script>
 </body>

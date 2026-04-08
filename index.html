@@ -5,31 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AMAN PRO MAX</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
-            --bg: #050505;
-            --surface: #121214;
-            --green: #00ffa3;
-            --red: #ff3d71;
-            --blue: #00e5ff;
-            --text: #ffffff;
-            --text-dim: #a1a1aa;
+            --bg: #050505; --surface: #121214; --green: #00ffa3;
+            --red: #ff3d71; --blue: #00e5ff; --text: #ffffff; --text-dim: #a1a1aa;
         }
-
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 15px; }
         .app { width: 100%; max-width: 450px; margin: 0 auto; }
-
         .header { display: flex; justify-content: space-between; align-items: center; margin: 10px 0 25px; }
         .brand { font-size: 26px; font-weight: 800; color: var(--blue); letter-spacing: -1px; }
-
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .card { background: var(--surface); padding: 20px; border-radius: 24px; border-left: 4px solid var(--blue); }
         .card.p { border-color: var(--green); }
         .card.d { border-color: var(--red); }
         .card span { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; }
         .card div { font-family: 'JetBrains Mono'; font-size: 22px; margin-top: 5px; }
-
         .form-box { background: var(--surface); padding: 24px; border-radius: 30px; margin-bottom: 20px; }
         input { 
             width: 100%; background: #1c1c1f; border: 1px solid #27272a; border-radius: 16px; 
@@ -40,29 +32,25 @@
             width: 100%; padding: 20px; border-radius: 18px; background: var(--blue); 
             color: #000; font-weight: 800; border: none; cursor: pointer; font-size: 15px; text-transform: uppercase;
         }
-
         .menu-btn {
             width: 100%; padding: 18px; border-radius: 18px; background: #1c1c1f;
             color: var(--text); border: 1px solid #27272a; font-weight: 600; cursor: pointer;
             margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;
         }
-
         .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 100; display: none; padding: 20px;
-            overflow-y: auto;
+            background: var(--bg); z-index: 100; display: none; padding: 20px; overflow-y: auto;
         }
-        .modal-header { margin-bottom: 25px; padding-top: 10px; }
-
         .item { 
             background: var(--surface); padding: 20px; border-radius: 24px; margin-bottom: 12px; 
             display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03);
         }
         .item b { font-size: 18px; display: block; margin-bottom: 4px; }
-        .date-info { color: var(--text-dim); font-size: 10px; font-family: 'JetBrains Mono'; font-weight: 500; }
+        .date-info { color: var(--text-dim); font-size: 10px; font-family: 'JetBrains Mono'; }
         .item-val { text-align: right; }
         .val-main { font-family: 'JetBrains Mono'; font-size: 18px; font-weight: 700; }
-        .val-sub { font-size: 10px; font-weight: 700; text-transform: uppercase; }
+        .backup-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .s-btn { background: #1c1c1f; color: var(--text-dim); border: 1px solid #27272a; padding: 10px; border-radius: 12px; font-size: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -72,6 +60,8 @@
         <div class="brand">AMAN PRO</div>
         <div id="clock" style="color: var(--text-dim); font-size: 14px;">00:00:00</div>
     </div>
+
+    <div id="today-stats" style="font-size: 11px; color: var(--text-dim); margin-bottom: 10px; text-align: center; font-weight: 600;"></div>
 
     <div class="grid">
         <div class="card p"><span>Töleg (+)</span><div id="t-p" style="color: var(--green);">0.00</div></div>
@@ -87,103 +77,103 @@
         <button class="btn" onclick="add()">Hasaby Täzele</button>
     </div>
 
-    <button class="menu-btn" onclick="toggleModal(true)">
-        📋 MÜŞDERILER SANAWY
-    </button>
+    <button class="menu-btn" onclick="toggleModal(true)">📋 MÜŞDERILER SANAWY</button>
+    
+    <div class="backup-btns">
+        <button class="s-btn" onclick="exportData()">💾 BACKUP AL</button>
+        <button class="s-btn" onclick="document.getElementById('fileInput').click()">📂 YZA ÝÜKLE</button>
+        <input type="file" id="fileInput" style="display:none" onchange="importData(event)">
+    </div>
 </div>
 
 <div id="customerModal" class="modal">
-    <div class="modal-header">
+    <div class="header">
         <div class="brand">MÜŞDERILER</div>
+        <button class="s-btn" onclick="downloadPDF()">📄 PDF ÝÜKLE</button>
     </div>
+    <input type="text" id="search" placeholder="Müşderi gözle..." oninput="render()" style="margin-bottom: 20px;">
     <div id="list"></div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('aman_v6')) || [];
+    let db = JSON.parse(localStorage.getItem('aman_v7')) || [];
 
-    // Telefonuň yza düwmesini dolandyrmak
-    window.onpopstate = function() {
-        document.getElementById('customerModal').style.display = 'none';
-    };
+    window.onpopstate = () => document.getElementById('customerModal').style.display = 'none';
 
     function toggleModal(show) {
-        if(show) {
-            history.pushState({page: 1}, "Müşderiler", "");
-            document.getElementById('customerModal').style.display = 'block';
-            render();
-        } else {
-            document.getElementById('customerModal').style.display = 'none';
-        }
+        if(show) { history.pushState({p:1}, "", ""); document.getElementById('customerModal').style.display = 'block'; render(); }
+        else { document.getElementById('customerModal').style.display = 'none'; }
     }
 
     function add() {
-        const nInput = document.getElementById('name'), pInput = document.getElementById('pay'), dInput = document.getElementById('debt');
-        const name = nInput.value.trim(), pay = parseFloat(pInput.value) || 0, debt = parseFloat(dInput.value) || 0;
-
+        const nI = document.getElementById('name'), pI = document.getElementById('pay'), dI = document.getElementById('debt');
+        const name = nI.value.trim(), pay = parseFloat(pI.value) || 0, debt = parseFloat(dI.value) || 0;
         if(!name) return;
 
-        // Häzirki wagty alýas
         const now = new Date();
-        const timeStr = now.getDate().toString().padStart(2, '0') + "." + 
-                        (now.getMonth()+1).toString().padStart(2, '0') + "." + 
-                        now.getFullYear() + " | " + 
-                        now.getHours().toString().padStart(2, '0') + ":" + 
-                        now.getMinutes().toString().padStart(2, '0');
+        const timeStr = `${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getFullYear()} | ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+        const dayKey = now.toLocaleDateString();
 
         let user = db.find(u => u.name.toLowerCase() === name.toLowerCase());
         if(user) {
-            user.p += pay; 
-            user.d += debt;
-            user.date = timeStr; // Wagty täzeleýäris
+            user.p += pay; user.d += debt; user.date = timeStr; user.lastUpdate = dayKey;
             db = [user, ...db.filter(u => u !== user)];
         } else {
-            db.unshift({ name: name, p: pay, d: debt, date: timeStr });
+            db.unshift({ name, p: pay, d: debt, date: timeStr, lastUpdate: dayKey });
         }
 
-        localStorage.setItem('aman_v6', JSON.stringify(db));
-        nInput.value = ""; pInput.value = ""; dInput.value = "";
-        updateStats();
-        alert("Üstünlikli täzelendi!");
+        localStorage.setItem('aman_v7', JSON.stringify(db));
+        nI.value = ""; pI.value = ""; dI.value = "";
+        updateStats(); alert("Täzelendi!");
     }
 
     function updateStats() {
-        let tp = 0, td = 0;
-        db.forEach(u => { tp += u.p; td += u.d; });
+        let tp = 0, td = 0, todayP = 0, todayD = 0;
+        const today = new Date().toLocaleDateString();
+        db.forEach(u => { 
+            tp += u.p; td += u.d; 
+            if(u.lastUpdate === today) { todayP += u.p; todayD += u.d; }
+        });
         document.getElementById('t-p').innerText = tp.toFixed(2);
         document.getElementById('t-d').innerText = td.toFixed(2);
+        document.getElementById('today-stats').innerText = `ŞU GÜN: +${todayP.toFixed(2)} TMT | -${todayD.toFixed(2)} TMT`;
     }
 
     function render() {
-        const list = document.getElementById('list');
-        list.innerHTML = db.length === 0 ? '<div style="text-align:center; color:#333; margin-top:50px;">Sanaw boş</div>' : "";
-        
-        db.forEach(u => {
+        const list = document.getElementById('list'), query = document.getElementById('search').value.toLowerCase();
+        list.innerHTML = "";
+        db.filter(u => u.name.toLowerCase().includes(query)).forEach(u => {
             const net = u.p - u.d;
-            const color = net >= 0 ? 'var(--green)' : 'var(--red)';
-            list.innerHTML += `
-                <div class="item" onclick="selectUser('${u.name}')">
-                    <div>
-                        <b>${u.name}</b>
-                        <div class="date-info">${u.date || '--.--.----'}</div>
-                        <small style="color:var(--text-dim); font-size:11px; display:block; margin-top:5px;">T: ${u.p.toFixed(2)} | B: ${u.d.toFixed(2)}</small>
-                    </div>
-                    <div class="item-val">
-                        <div class="val-main" style="color: ${color}">${net.toFixed(2)}</div>
-                        <div class="val-sub" style="color: ${color}">${net >= 0 ? 'Galyndy' : 'Bergi'}</div>
-                    </div>
-                </div>`;
+            list.innerHTML += `<div class="item" onclick="selectUser('${u.name}')">
+                <div><b>${u.name}</b><div class="date-info">${u.date}</div></div>
+                <div class="item-val"><div class="val-main" style="color:${net>=0?'var(--green)':'var(--red)'}">${net.toFixed(2)}</div></div>
+            </div>`;
         });
     }
 
-    function selectUser(n) {
-        document.getElementById('name').value = n;
-        history.back(); // Bu awtomatik modal penjiräni ýapar
+    function selectUser(n) { document.getElementById('name').value = n; history.back(); }
+
+    function exportData() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+        const a = document.createElement('a'); a.setAttribute("href", dataStr); a.setAttribute("download", "aman_backup.json"); a.click();
     }
 
-    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+    function importData(e) {
+        const reader = new FileReader();
+        reader.onload = (ev) => { db = JSON.parse(ev.target.result); localStorage.setItem('aman_v7', JSON.stringify(db)); updateStats(); alert("Yza ýüklendi!"); };
+        reader.readAsText(e.target.files[0]);
+    }
+
+    function downloadPDF() {
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        doc.text("AMAN PRO - MUSDERI HASABATY", 10, 10);
+        let y = 20;
+        db.forEach(u => { doc.text(`${u.name}: ${(u.p-u.d).toFixed(2)} TMT`, 10, y); y += 10; });
+        doc.save("hasabat.pdf");
+    }
+
+    setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
     updateStats();
 </script>
-
 </body>
 </html>

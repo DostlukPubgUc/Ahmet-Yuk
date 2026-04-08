@@ -3,138 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AMAN | Business Management</title>
+    <title>AMAN PRO v3.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0b0b0d;
-            --surface: #16161a;
-            --accent: #00f2ff;
-            --green: #00ff88;
-            --red: #ff3366;
-            --text-main: #ffffff;
-            --text-dim: #71717a;
+            --bg: #0b0b0d; --surface: #16161a; --accent: #00f2ff;
+            --green: #00ff88; --red: #ff3366; --text-main: #ffffff; --text-dim: #71717a;
         }
-
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { 
-            background: var(--bg); 
-            color: var(--text-main); 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-            display: flex; 
-            justify-content: center;
-        }
-
+        body { background: var(--bg); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 15px; display: flex; justify-content: center; }
         .app-container { width: 100%; max-width: 480px; }
-
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-        .brand { font-weight: 800; font-size: 22px; color: var(--accent); letter-spacing: -1px; }
-        .clock { font-family: 'JetBrains Mono'; font-size: 14px; color: var(--text-dim); }
-
-        /* Status Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        .stat-card {
-            background: var(--surface);
-            padding: 20px;
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .stat-card small { color: var(--text-dim); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-card div { font-family: 'JetBrains Mono'; font-size: 20px; margin-top: 8px; }
-
-        /* Input Panel */
-        .panel {
-            background: var(--surface);
-            padding: 25px;
-            border-radius: 32px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        input {
-            width: 100%;
-            background: #1f1f24;
-            border: 1px solid #2d2d33;
-            border-radius: 16px;
-            padding: 18px;
-            color: white;
-            font-size: 16px;
-            margin-bottom: 15px;
-            outline: none;
-            transition: 0.2s;
-        }
-        input:focus { border-color: var(--accent); background: #25252b; }
         
-        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        /* Header */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 10px 5px; }
+        .brand { font-weight: 800; font-size: 24px; color: var(--accent); letter-spacing: -1px; }
+        
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .stat-card { background: var(--surface); padding: 20px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-card small { color: var(--text-dim); font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        .stat-card div { font-family: 'JetBrains Mono'; font-size: 19px; margin-top: 8px; }
 
-        .main-btn {
-            width: 100%;
-            padding: 20px;
-            border-radius: 18px;
-            background: var(--text-main);
-            color: black;
-            font-weight: 800;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            margin-top: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.2s;
-        }
-        .main-btn:active { transform: scale(0.96); opacity: 0.9; }
+        /* Form */
+        .panel { background: var(--surface); padding: 22px; border-radius: 28px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 25px; }
+        input { width: 100%; background: #202025; border: 1px solid #2d2d33; border-radius: 14px; padding: 16px; color: white; font-size: 16px; margin-bottom: 12px; outline: none; }
+        input:focus { border-color: var(--accent); }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .main-btn { width: 100%; padding: 18px; border-radius: 15px; background: white; color: black; font-weight: 800; border: none; cursor: pointer; font-size: 14px; text-transform: uppercase; }
+        .main-btn:active { transform: scale(0.97); }
 
-        /* List Section */
-        .list-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 10px 15px;
-        }
-        .list-header h3 { font-size: 12px; color: var(--text-dim); letter-spacing: 1px; margin: 0; }
-
-        .list-item {
-            background: var(--surface);
-            margin-bottom: 12px;
-            padding: 20px;
-            border-radius: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid rgba(255,255,255,0.03);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .list-item:active { background: #1f1f24; transform: scale(0.98); }
-        .name { font-weight: 700; font-size: 16px; margin-bottom: 4px; display: block; }
-        .date { font-size: 10px; color: #555; font-weight: 600; }
-
-        .val-pay { color: var(--green); font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono'; }
-        .val-debt { font-size: 18px; font-weight: 800; font-family: 'JetBrains Mono'; margin-top: 2px; }
-
-        .reset-btn {
-            width: 100%;
-            background: none;
-            border: none;
-            color: #333;
-            font-size: 10px;
-            margin-top: 30px;
-            padding: 20px;
-            cursor: pointer;
-        }
+        /* List */
+        .list-header { margin: 20px 0 12px 5px; font-size: 12px; color: var(--text-dim); font-weight: 800; letter-spacing: 1px; }
+        .list-item { background: var(--surface); padding: 18px; border-radius: 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03); }
+        .val-pay { color: var(--green); font-size: 11px; font-family: 'JetBrains Mono'; }
+        .val-debt { font-family: 'JetBrains Mono'; font-size: 17px; font-weight: 800; margin-top: 2px; }
     </style>
 </head>
 <body>
@@ -142,16 +45,16 @@
 <div class="app-container">
     <div class="header">
         <div class="brand">AMAN</div>
-        <div class="clock" id="clock">00:00:00</div>
+        <div id="clock" style="font-family: 'JetBrains Mono'; color: var(--text-dim); font-size: 14px;">00:00:00</div>
     </div>
 
     <div class="stats-grid">
         <div class="stat-card">
-            <small>Jemi Töleg (+)</small>
+            <small>JEMI TÖLEG (+)</small>
             <div id="t-pay" style="color: var(--green);">0.00</div>
         </div>
         <div class="stat-card">
-            <small>Jemi Bergi (-)</small>
+            <small>JEMI BERGI (-)</small>
             <div id="t-debt" style="color: var(--red);">0.00</div>
         </div>
     </div>
@@ -165,106 +68,74 @@
         <button class="main-btn" onclick="saveData()">Hasaby Täzele</button>
     </div>
 
-    <div class="list-header">
-        <h3>MÜŞDERI SANAWY</h3>
-    </div>
-    
-    <div id="customer-list">
-        <!-- Sanaw bura geler -->
-    </div>
+    <div class="list-header">MÜŞDERI SANAWY</div>
+    <div id="customer-list"></div>
 
-    <button class="reset-btn" onclick="clearData()">Sistemany Arassala</button>
+    <button onclick="clearAll()" style="background:none; border:none; color:#333; width:100%; margin-top:30px; font-size:10px;">SISTEMANY NÖLLE</button>
 </div>
 
 <script>
-    let customers = JSON.parse(localStorage.getItem('aman_business_db')) || [];
+    // Maglumatlar bazasy (Version 3)
+    let customers = JSON.parse(localStorage.getItem('aman_v3_db')) || [];
 
     function saveData() {
-        const nameInput = document.getElementById('c-name');
-        const payInput = document.getElementById('c-pay');
-        const debtInput = document.getElementById('c-debt');
+        const nInput = document.getElementById('c-name');
+        const pInput = document.getElementById('c-pay');
+        const dInput = document.getElementById('c-debt');
 
-        const name = nameInput.value.trim();
-        const pay = parseFloat(payInput.value) || 0;
-        const debt = parseFloat(debtInput.value) || 0;
+        const name = nInput.value.trim();
+        const pay = parseFloat(pInput.value) || 0;
+        const debt = parseFloat(dInput.value) || 0;
 
-        if (!name) {
-            alert("Lütfen müşderiniň adyny giriziň!");
-            return;
-        }
+        if(!name) return;
 
         let user = customers.find(c => c.name.toLowerCase() === name.toLowerCase());
 
-        if (user) {
-            user.totalPay += pay;
-            user.balance -= debt; // Bergi aýrylýar (-)
-            user.lastDate = new Date().toLocaleTimeString().slice(0, 5);
-            // Iň soňky täzeleneni başa geçir
+        if(user) {
+            user.tp += pay;
+            user.bl -= debt; // Bergi (-) diýmek hasapdan aýyrmak
+            // Iň täze amaly başa geçirmek
             customers = [user, ...customers.filter(c => c !== user)];
         } else {
-            customers.unshift({
-                name: name,
-                totalPay: pay,
-                balance: -debt, // Täze müşderi bolsa bergi eksi bolup başlaýar
-                lastDate: new Date().toLocaleTimeString().slice(0, 5)
-            });
+            customers.unshift({ name: name, tp: pay, bl: -debt });
         }
 
-        localStorage.setItem('aman_business_db', JSON.stringify(customers));
-        
-        nameInput.value = "";
-        payInput.value = "";
-        debtInput.value = "";
-        
+        localStorage.setItem('aman_v3_db', JSON.stringify(customers));
+        nInput.value = ""; pInput.value = ""; dInput.value = "";
         render();
     }
 
     function render() {
-        const listDiv = document.getElementById('customer-list');
-        let totalP = 0;
-        let totalD = 0;
-        listDiv.innerHTML = "";
+        const list = document.getElementById('customer-list');
+        let totalP = 0, totalD = 0;
+        list.innerHTML = "";
 
         customers.forEach(c => {
-            totalP += c.totalPay;
-            totalD += c.balance;
-
-            const balanceColor = c.balance < 0 ? 'var(--red)' : 'var(--green)';
-            const sign = c.balance > 0 ? '+' : '';
-
-            listDiv.innerHTML += `
+            totalP += c.tp;
+            totalD += c.bl;
+            
+            list.innerHTML += `
                 <div class="list-item" onclick="document.getElementById('c-name').value='${c.name}'">
                     <div>
-                        <span class="name">${c.name}</span>
-                        <span class="date">Soňky täzelenme: ${c.lastDate}</span>
+                        <b style="display:block;">${c.name}</b>
+                        <small style="color:#444; font-size:10px;">Müşderi</small>
                     </div>
-                    <div style="text-align: right;">
-                        <div class="val-pay">+${c.totalPay.toFixed(2)}</div>
-                        <div class="val-debt" style="color: ${balanceColor}">
-                            ${sign}${c.balance.toFixed(2)}
+                    <div style="text-align:right;">
+                        <div class="val-pay">+${c.tp.toFixed(2)}</div>
+                        <div class="val-debt" style="color: ${c.bl < 0 ? 'var(--red)' : 'var(--green)'}">
+                            ${c.bl.toFixed(2)}
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
         });
 
         document.getElementById('t-pay').innerText = totalP.toFixed(2);
         document.getElementById('t-debt').innerText = totalD.toFixed(2);
     }
 
-    function clearData() {
-        if(confirm("Ähli hasaplar öçer. Razymy?")) {
-            localStorage.clear();
-            location.reload();
-        }
-    }
-
-    setInterval(() => {
-        document.getElementById('clock').innerText = new Date().toLocaleTimeString();
-    }, 1000);
-
+    function clearAll() { if(confirm("Hemme zat öçer!")) { localStorage.clear(); location.reload(); } }
+    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
     render();
 </script>
-
 </body>
 </html>

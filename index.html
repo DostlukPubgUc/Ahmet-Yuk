@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AMAN PRO v16</title>
+    <title>AMAN PRO v16.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -12,26 +12,35 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 15px; opacity: 0; animation: fadeInBody 0.8s forwards; }
         @keyframes fadeInBody { from { opacity: 0; } to { opacity: 1; } }
+        
         .app { width: 100%; max-width: 450px; margin: 0 auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; animation: slideDown 0.5s ease; }
         @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
         .brand { font-size: 24px; font-weight: 800; color: var(--blue); letter-spacing: -0.5px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        
         .card { background: var(--surf); padding: 20px; border-radius: 22px; border-left: 4px solid var(--blue); animation: cardIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; position: relative; overflow: hidden; }
         .card:nth-child(2) { animation-delay: 0.1s; border-color: var(--red); }
         @keyframes cardIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
         .form-box { background: var(--surf); padding: 22px; border-radius: 28px; margin-bottom: 20px; animation: slideUp 0.6s 0.2s backwards; border: 1px solid rgba(255,255,255,0.03); }
         @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
         input { width: 100%; background: #1c1c1f; border: 1px solid #27272a; border-radius: 16px; padding: 16px; color: white; margin-bottom: 12px; font-size: 16px; }
         .btn { width: 100%; padding: 20px; border-radius: 18px; background: var(--blue); color: #000; font-weight: 800; border: none; cursor: pointer; font-size: 15px; }
         .btn:active { transform: scale(0.96); }
+        
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 100; display: none; padding: 20px; overflow-y: auto; animation: modalPop 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes modalPop { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
         .item { background: var(--surf); padding: 14px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03); animation: itemSlide 0.4s backwards; }
         @keyframes itemSlide { from { transform: translateX(-30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
         .mic-btn { width: 100%; padding: 14px; border-radius: 14px; background: #1c1c1f; color: var(--text); border: 1px solid #27272a; margin-bottom: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .mic-active { color: var(--red); border-color: var(--red); box-shadow: 0 0 20px rgba(255, 61, 113, 0.3); animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.98); opacity: 0.6; } }
+        
         .user-img { width: 55px; height: 55px; border-radius: 50%; background: #222; overflow: hidden; border: 2px solid var(--blue); flex-shrink: 0; cursor: pointer; }
         .user-img img { width: 100%; height: 100%; object-fit: cover; }
         #lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -87,7 +96,7 @@
 <div id="customerModal" class="modal">
     <div class="header">
         <div class="brand">MAGLUMATLAR</div>
-        <button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800; cursor:pointer;">ÝAP</button>
+        <button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800;">ÝAP</button>
     </div>
     <div class="tool-bar">
         <button class="tool-btn" onclick="downloadPDF()">📄 PDF</button>
@@ -102,7 +111,7 @@
 <div id="detailsModal" class="modal">
     <div class="header">
         <div id="det-name" class="brand">...</div>
-        <button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800; cursor:pointer;">YZA</button>
+        <button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800;">YZA</button>
     </div>
     <center><div id="qrcode"></div></center>
     <div id="det-history" style="margin-top:25px;"></div>
@@ -112,72 +121,34 @@
     let db = JSON.parse(localStorage.getItem('aman_v16_db')) || [];
     let savedPin = localStorage.getItem('aman_pin');
     let currentImg = "";
-    let recognition;
 
-    // PRIKOL SESLERI
     function playPrikol(type) {
-        const utter = new SpeechSynthesisUtterance();
-        utter.lang = 'tr-TR'; 
-        if(type === 'pay') {
-            utter.text = "Pul geçdi!";
-            utter.pitch = 0.7; // Erkek sesi ýaly pes
-            utter.rate = 0.9;
-        } else if(type === 'debt') {
-            utter.text = "Sen adam bolmaýarsyň-da...";
-            utter.pitch = 1.3; // Gyzyklyrak ses
-            utter.rate = 1.1;
-        } else if(type === 'wrong') {
-            utter.text = "Ýalňyş PIN, dostum!";
-            utter.pitch = 1;
-        }
-        window.speechSynthesis.speak(utter);
+        try {
+            const utter = new SpeechSynthesisUtterance();
+            utter.lang = 'tr-TR';
+            if(type === 'pay') { utter.text = "Pul geçdi!"; utter.pitch = 0.7; utter.rate = 0.9; }
+            else if(type === 'debt') { utter.text = "Sen adam bolmaýarsyň-da"; utter.pitch = 1.3; utter.rate = 1.1; }
+            else if(type === 'wrong') { utter.text = "Ýalňyş PIN!"; }
+            window.speechSynthesis.speak(utter);
+        } catch(e) {}
     }
 
     function handleLock() {
         const pin = document.getElementById('pin-input').value;
         if(!savedPin) { localStorage.setItem('aman_pin', pin); location.reload(); }
         else if(pin === savedPin) document.getElementById('lock-screen').style.display='none';
-        else { playPrikol('wrong'); alert("Ýalňyş PIN!"); document.getElementById('pin-input').value=""; }
-    }
-
-    function toggleMic() {
-        recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
-        recognition.lang = 'tr-TR';
-        recognition.onstart = () => {
-            document.getElementById('mic-main').classList.add('mic-active');
-            document.getElementById('mic-main').innerText = "🎤 Diňleýärin...";
-        };
-        recognition.onresult = (e) => {
-            const text = e.results[0][0].transcript.toLowerCase();
-            const words = text.split(" ");
-            const amount = text.match(/\d+/);
-            document.getElementById('name').value = words[0].charAt(0).toUpperCase() + words[0].slice(1);
-            if(amount) {
-                if(text.includes("berdi") || text.includes("töledi")) document.getElementById('pay').value = amount[0];
-                else if(text.includes("aldy") || text.includes("bergi")) document.getElementById('debt').value = amount[0];
-            }
-        };
-        recognition.onend = () => {
-            document.getElementById('mic-main').classList.remove('mic-active');
-            document.getElementById('mic-main').innerText = "🎤 Akylly Ses (Berdi/Aldy)";
-        };
-        recognition.start();
-    }
-
-    function getDynamicColor(val) {
-        if(val <= 0) return 'var(--green)';
-        if(val <= 100) return '#cddc39';
-        if(val <= 500) return 'var(--orange)';
-        return 'var(--red)';
+        else { playPrikol('wrong'); document.getElementById('pin-input').value=""; }
     }
 
     function add() {
-        const n = document.getElementById('name').value.trim();
-        const p = parseFloat(document.getElementById('pay').value) || 0;
-        const d = parseFloat(document.getElementById('debt').value) || 0;
+        const nInput = document.getElementById('name');
+        const pInput = document.getElementById('pay');
+        const dInput = document.getElementById('debt');
+        const n = nInput.value.trim();
+        const p = parseFloat(pInput.value) || 0;
+        const d = parseFloat(dInput.value) || 0;
+        
         if(!n) return;
-
-        // SES REAKSIÝASY
         if(p > 0) playPrikol('pay');
         else if(d > 0) playPrikol('debt');
 
@@ -192,9 +163,33 @@
         }
         localStorage.setItem('aman_v16_db', JSON.stringify(db));
         updateStats();
-        document.getElementById('name').value = ""; document.getElementById('pay').value = ""; document.getElementById('debt').value = "";
-        document.getElementById('prev-img').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+        nInput.value = ""; pInput.value = ""; dInput.value = "";
+        document.getElementById('prev-img').src = "data:image/svg+xml,...";
         currentImg = "";
+    }
+
+    function toggleMic() {
+        const recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
+        recognition.lang = 'tr-TR';
+        recognition.onstart = () => { document.getElementById('mic-main').classList.add('mic-active'); };
+        recognition.onresult = (e) => {
+            const text = e.results[0][0].transcript.toLowerCase();
+            const words = text.split(" ");
+            const amount = text.match(/\d+/);
+            document.getElementById('name').value = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+            if(amount) {
+                if(text.includes("berdi")) document.getElementById('pay').value = amount[0];
+                else if(text.includes("aldy")) document.getElementById('debt').value = amount[0];
+            }
+        };
+        recognition.onend = () => { document.getElementById('mic-main').classList.remove('mic-active'); };
+        recognition.start();
+    }
+
+    function updateStats() {
+        let tp=0, td=0; db.forEach(u => { tp+=u.p; td+=u.d; });
+        document.getElementById('t-p').innerText = tp.toFixed(2);
+        document.getElementById('t-d').innerText = td.toFixed(2);
     }
 
     function render() {
@@ -203,13 +198,12 @@
         const query = document.getElementById('search').value.toLowerCase();
         db.filter(u => u.name.toLowerCase().includes(query)).forEach((u, i) => {
             const net = u.d - u.p;
-            const color = getDynamicColor(net);
             list.innerHTML += `<div class="item" style="animation-delay:${i*0.05}s" onclick="showDetails('${u.name}')">
                 <div style="display:flex; gap:12px; align-items:center;">
-                    <div class="user-img" style="border-color:${color}"><img src="${u.img || ''}"></div>
+                    <div class="user-img"><img src="${u.img || ''}"></div>
                     <b>${u.name}</b>
                 </div>
-                <b style="color:${color}">${(u.p - u.d).toFixed(2)}</b>
+                <b>${(u.p - u.d).toFixed(2)}</b>
             </div>`;
         });
     }
@@ -218,17 +212,11 @@
         const u = db.find(x => x.name === n);
         document.getElementById('det-name').innerText = u.name;
         document.getElementById('qrcode').innerHTML = "";
-        new QRCode(document.getElementById("qrcode"), { text: `Toleg: ${u.name} - ${(u.p-u.d).toFixed(2)}`, width: 130, height: 130 });
+        new QRCode(document.getElementById("qrcode"), { text: `${u.name}: ${(u.p-u.d).toFixed(2)}`, width: 130, height: 130 });
         let h = "";
         u.logs.forEach(l => h += `<div style="font-size:12px; border-bottom:1px solid #222; padding:10px; display:flex; justify-content:space-between;"><span>${l.t}</span><span>+${l.p} / -${l.d}</span></div>`);
         document.getElementById('det-history').innerHTML = h;
         toggleModal('detailsModal');
-    }
-
-    function updateStats() {
-        let tp=0, td=0; db.forEach(u => { tp+=u.p; td+=u.d; });
-        document.getElementById('t-p').innerText = tp.toFixed(2);
-        document.getElementById('t-d').innerText = td.toFixed(2);
     }
 
     function toggleModal(id) { history.pushState({p:1}, "", ""); document.getElementById(id).style.display = 'block'; if(id==='customerModal') render(); }
@@ -239,7 +227,7 @@
         reader.readAsDataURL(e.target.files[0]);
     }
     function downloadPDF() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); db.forEach((u, i) => doc.text(`${u.name}: ${(u.p-u.d).toFixed(2)}`, 10, 20+(i*10))); doc.save("Hasabat.pdf"); }
-    function exportData() { const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); a.download = "Backup_Aman.json"; a.click(); }
+    function exportData() { const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); a.download = "Backup.json"; a.click(); }
     function importData(e) { const r = new FileReader(); r.onload = (v) => { db = JSON.parse(v.target.result); localStorage.setItem('aman_v16_db', JSON.stringify(db)); updateStats(); alert("OK!"); }; r.readAsText(e.target.files[0]); }
     setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
     updateStats();

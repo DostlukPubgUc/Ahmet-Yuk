@@ -97,11 +97,11 @@
 <div id="detailsModal" class="modal"></div>
 
 <script>
-// Maglumatlar we gurluşlar
+// Maglumatlar gory
 let customers = JSON.parse(localStorage.getItem('aman_pro_db')) || [];
 let base64Image = "";
 
-// Canly Sagat Funksiýasy
+// Canly Sagat
 function updateClock() {
     const now = new Date();
     document.getElementById('clock').innerText = now.toTimeString().split(' ')[0];
@@ -109,7 +109,7 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// Modallary dolandyrmak
+// Modallary Dolandyrmak
 function toggleModal(id) {
     const modal = document.getElementById(id);
     if (modal.style.display === 'block') {
@@ -119,7 +119,7 @@ function toggleModal(id) {
     }
 }
 
-// Profil suraty saýlamak
+// Profil Suratyny Okatmak
 function previewImg(event) {
     const file = event.target.files[0];
     if (file) {
@@ -132,7 +132,7 @@ function previewImg(event) {
     }
 }
 
-// "HASABY TÄZELE" IŇ ESASY FUNKSIÝASY
+// Hasap Goşmak we Täzelemek
 function add() {
     const nameInput = document.getElementById('name').value.trim();
     const payInput = parseFloat(document.getElementById('pay').value) || 0;
@@ -166,7 +166,7 @@ function add() {
 
     saveAndRefresh();
     
-    // Gözleri arassalamak
+    // Inputlary arassalamak
     document.getElementById('name').value = "";
     document.getElementById('pay').value = "";
     document.getElementById('debt').value = "";
@@ -174,7 +174,7 @@ function add() {
     base64Image = "";
 }
 
-// Jemi hasaplamalar we LocalStorage täzelemek
+// Jemi we Danger-Mode Hasaplaýyş
 function saveAndRefresh() {
     localStorage.setItem('aman_pro_db', JSON.stringify(customers));
     
@@ -199,7 +199,7 @@ function saveAndRefresh() {
     render();
 }
 
-// Sanawy ekrana çykarmak
+// Sanawy Ekrana Çykarmak (Ýaşyl, Sary, Gyzyl Reňk Logikasy)
 function render() {
     const list = document.getElementById('list');
     const searchVal = document.getElementById('search').value.toLowerCase();
@@ -207,6 +207,20 @@ function render() {
 
     customers.forEach((c, index) => {
         if (c.name.toLowerCase().includes(searchVal)) {
+            const netResult = c.debt - c.pay;
+            let finalPriceHTML = "";
+            
+            if (netResult <= 0) {
+                // Bergisi ýok ýa-da puly artykmaç bolsa (ÝAŞYL)
+                finalPriceHTML = `<div style="font-weight:800; color:var(--green);">+${Math.abs(netResult).toFixed(2)}</div>`;
+            } else if (c.pay > 0 && netResult <= (c.pay * 0.5 || 50)) { 
+                // Azajyk bergi ýagdaýynda ýa-da 100 berip 101 alanda (SARY)
+                finalPriceHTML = `<div style="font-weight:800; color:var(--orange); text-shadow: 0 0 10px rgba(255,171,0,0.2);">-${netResult.toFixed(2)}</div>`;
+            } else {
+                // Has köp bergi eden bolsa (GYZYL)
+                finalPriceHTML = `<div style="font-weight:800; color:var(--red); text-shadow: 0 0 10px rgba(255,61,113,0.2);">-${netResult.toFixed(2)}</div>`;
+            }
+
             const item = document.createElement('div');
             item.className = 'item';
             item.onclick = () => openDetails(index);
@@ -216,18 +230,18 @@ function render() {
                         <img src="${c.image}">
                     </div>
                     <div>
-                        <div style="font-weight:600;">${c.name}</div>
-                        <div style="font-size:11px; color:var(--dim);">Töleg: <span style="color:var(--green)">+${c.pay}</span></div>
+                        <div style="font-weight:600; color:white;">${c.name}</div>
+                        <div style="font-size:11px; color:var(--dim);">Töleg: <span style="color:var(--green)">+${c.pay}</span> | Bergi: <span style="color:var(--red)">-${c.debt}</span></div>
                     </div>
                 </div>
-                <div style="font-weight:800; color:var(--red);">${c.debt > 0 ? '-' + c.debt.toFixed(2) : '0.00'}</div>
+                ${finalPriceHTML}
             `;
             list.appendChild(item);
         }
     });
 }
 
-// Giňişleýin maglumat (QR Kodly)
+// Müşderi Jemi Taryhy we QR Kod
 function openDetails(index) {
     const c = customers[index];
     const detailsModal = document.getElementById('detailsModal');
@@ -280,7 +294,7 @@ function deleteCustomer(index) {
     }
 }
 
-// Akylly ses dolandyryşy
+// Akylly Ses Kontroly
 let recognition;
 function toggleMic() {
     const btn = document.getElementById('mic-main');
@@ -322,6 +336,7 @@ function toggleMic() {
     recognition.start();
 }
 
+// Eksport we Import Işleri
 function downloadPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();

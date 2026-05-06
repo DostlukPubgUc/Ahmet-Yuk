@@ -34,7 +34,6 @@
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 100; display: none; padding: 20px; overflow-y: auto; animation: modalPop 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes modalPop { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        /* BERGI KÖP BOLSA GYLYZ ÝANYP-SÖNMEK ANIMASIÝASY */
         .danger-mode { border: 2px solid var(--red) !important; animation: dangerGlow 1.5s infinite ease-in-out; }
         @keyframes dangerGlow { 0% { box-shadow: 0 0 5px var(--red); } 50% { box-shadow: 0 0 20px var(--red); background: #2a0a0a; } 100% { box-shadow: 0 0 5px var(--red); } }
 
@@ -45,9 +44,8 @@
         .mic-active { color: var(--red); border-color: var(--red); box-shadow: 0 0 20px rgba(255, 61, 113, 0.3); animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.98); opacity: 0.6; } }
         
-        .user-img { width: 55px; height: 55px; border-radius: 50%; background: #222; overflow: hidden; border: 2px solid var(--blue); flex-shrink: 0; }
+        .user-img { width: 55px; height: 55px; border-radius: 50%; background: #222; overflow: hidden; border: 2px solid var(--blue); flex-shrink: 0; cursor: pointer; }
         .user-img img { width: 100%; height: 100%; object-fit: cover; }
-        #lock-screen { display: none; }
         #qrcode { background: white; padding: 12px; border-radius: 18px; display: inline-block; }
         .tool-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
         .tool-btn { background: #1c1c1f; border: 1px solid #27272a; color: white; padding: 12px; border-radius: 14px; font-size: 11px; font-weight: 800; }
@@ -85,7 +83,7 @@
 </div>
 
 <div id="customerModal" class="modal">
-    <div class="header"><div class="brand">MAGLUMATLAR</div><button onclick="history.back()" style="color:var(--blue); background:none; border:none; font-weight:800;">ÝAP</button></div>
+    <div class="header"><div class="brand">MAGLUMATLAR</div><button onclick="toggleModal('customerModal')" style="color:var(--blue); background:none; border:none; font-weight:800; cursor:pointer;">ÝAP</button></div>
     <div class="tool-bar">
         <button class="tool-btn" onclick="downloadPDF()">📄 PDF</button>
         <button class="tool-btn" onclick="exportData()">💾 BACKUP</button>
@@ -96,9 +94,269 @@
     <div id="list"></div>
 </div>
 
-<div id="detailsModal" class="modal">
-    <div class="header"></div>
-</div>
+<div id="detailsModal" class="modal"></div>
+
+<script>
+// Maglumatlar we gurluşlar
+let customers = JSON.parse(localStorage.getItem('aman_pro_db')) || [];
+let base64Image = "";
+
+// Canly Sagat Funksiýasy
+function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').innerText = now.toTimeString().split(' ')[0];
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Modallary dolandyrmak
+function toggleModal(id) {
+    const modal = document.getElementById(id);
+    if (modal.style.display === 'block') {
+        modal.style.display = 'none';
+    } else {
+        modal.style.display = 'block';
+    }
+}
+
+// Profil suraty saýlamak
+function previewImg(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            base64Image = e.target.result;
+            document.getElementById('prev-img').src = base64Image;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// "HASABY TÄZELE" IŇ ESASY FUNKSIÝASY
+function add() {
+    const nameInput = document.getElementById('name').value.trim();
+    const payInput = parseFloat(document.getElementById('pay').value) || 0;
+    const debtInput = parseFloat(document.getElementById('debt').value) || 0;
+
+    if (!nameInput) {
+        alert("Müşderiniň adyny ýazyň!");
+        return;
+    }
+
+    let customer = customers.find(c => c.name.toLowerCase() === nameInput.toLowerCase());
+
+    if (customer) {
+        customer.pay += payInput;
+        customer.debt += debtInput;
+        if (base64Image) customer.image = base64Image;
+        customer.history.push({
+            date: new Date().toLocaleDateString(),
+            pay: payInput,
+            debt: debtInput
+        });
+    } else {
+        customers.push({
+            name: nameInput,
+            pay: payInput,
+            debt: debtInput,
+            image: base64Image || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E",
+            history: [{ date: new Date().toLocaleDateString(), pay: payInput, debt: debtInput }]
+        });
+    }
+
+    saveAndRefresh();
+    
+    // Gözleri arassalamak
+    document.getElementById('name').value = "";
+    document.getElementById('pay').value = "";
+    document.getElementById('debt').value = "";
+    document.getElementById('prev-img').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+    base64Image = "";
+}
+
+// Jemi hasaplamalar we LocalStorage täzelemek
+function saveAndRefresh() {
+    localStorage.setItem('aman_pro_db', JSON.stringify(customers));
+    
+    let totalPay = 0;
+    let totalDebt = 0;
+
+    customers.forEach(c => {
+        totalPay += c.pay;
+        totalDebt += c.debt;
+    });
+
+    document.getElementById('t-p').innerText = totalPay.toFixed(2);
+    document.getElementById('t-d').innerText = totalDebt.toFixed(2);
+
+    const debtCard = document.getElementById('t-d').parentElement;
+    if (totalDebt > totalPay) {
+        debtCard.classList.add('danger-mode');
+    } else {
+        debtCard.classList.remove('danger-mode');
+    }
+
+    render();
+}
+
+// Sanawy ekrana çykarmak
+function render() {
+    const list = document.getElementById('list');
+    const searchVal = document.getElementById('search').value.toLowerCase();
+    list.innerHTML = "";
+
+    customers.forEach((c, index) => {
+        if (c.name.toLowerCase().includes(searchVal)) {
+            const item = document.createElement('div');
+            item.className = 'item';
+            item.onclick = () => openDetails(index);
+            item.innerHTML = `
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div class="user-img" style="width:40px; height:40px;">
+                        <img src="${c.image}">
+                    </div>
+                    <div>
+                        <div style="font-weight:600;">${c.name}</div>
+                        <div style="font-size:11px; color:var(--dim);">Töleg: <span style="color:var(--green)">+${c.pay}</span></div>
+                    </div>
+                </div>
+                <div style="font-weight:800; color:var(--red);">${c.debt > 0 ? '-' + c.debt.toFixed(2) : '0.00'}</div>
+            `;
+            list.appendChild(item);
+        }
+    });
+}
+
+// Giňişleýin maglumat (QR Kodly)
+function openDetails(index) {
+    const c = customers[index];
+    const detailsModal = document.getElementById('detailsModal');
+    
+    let historyHTML = c.history.map(h => `
+        <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #222; font-size:13px;">
+            <span style="color:var(--dim);">${h.date}</span>
+            <span>Töleg: <span style="color:var(--green)">+${h.pay}</span> | Bergi: <span style="color:var(--red)">-${h.debt}</span></span>
+        </div>
+    `).join('');
+
+    detailsModal.innerHTML = `
+        <div class="header">
+            <div class="brand">${c.name}</div>
+            <button onclick="toggleModal('detailsModal')" style="color:var(--blue); background:none; border:none; font-weight:800; cursor:pointer;">ÝAP</button>
+        </div>
+        <div style="text-align:center; margin-bottom:20px;">
+            <img src="${c.image}" style="width:90px; height:90px; border-radius:50%; border:3px solid var(--blue); object-fit:cover;">
+            <div style="margin-top:15px; font-size:22px; font-weight:800; color:var(--red);">Galan Bergi: ${(c.debt - c.pay > 0 ? (c.debt - c.pay).toFixed(2) : "0.00")}</div>
+        </div>
+        
+        <h3 style="color:var(--dim); font-size:14px; margin-bottom:10px;">GÖÇÜM TARYHY</h3>
+        <div style="background:var(--surf); padding:15px; border-radius:20px; max-height:200px; overflow-y:auto; margin-bottom:20px;">
+            ${historyHTML}
+        </div>
+
+        <div id="qrcode-box" style="text-align:center; margin-bottom:20px;">
+            <div id="qrcode" style="margin:0 auto;"></div>
+        </div>
+
+        <button class="btn" style="background:var(--red); color:#000; margin-bottom:10px;" onclick="deleteCustomer(${index})">MÜŞDERINI ÖÇÜR</button>
+    `;
+    
+    toggleModal('detailsModal');
+    
+    setTimeout(() => {
+        new QRCode(document.getElementById("qrcode"), {
+            text: `Musderi: ${c.name}\nJemi Bergi: ${(c.debt - c.pay).toFixed(2)}`,
+            width: 128,
+            height: 128
+        });
+    }, 200);
+}
+
+function deleteCustomer(index) {
+    if (confirm("Bu müşderini öçürmek isleýärsiňizmi?")) {
+        customers.splice(index, 1);
+        toggleModal('detailsModal');
+        saveAndRefresh();
+    }
+}
+
+// Akylly ses dolandyryşy
+let recognition;
+function toggleMic() {
+    const btn = document.getElementById('mic-main');
+    if (btn.classList.contains('mic-active')) {
+        recognition.stop();
+        btn.classList.remove('mic-active');
+        return;
+    }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert("Ses goldanok.");
+        return;
+    }
+    recognition = new SpeechRecognition();
+    recognition.lang = 'tr-TR';
+    btn.classList.add('mic-active');
+
+    recognition.onresult = function(event) {
+        const text = event.results[0][0].transcript.toLowerCase();
+        btn.classList.remove('mic-active');
+        const words = text.split(" ");
+        if (words.length >= 3) {
+            const name = words[0];
+            const puly = parseFloat(words[1]);
+            const hereket = words[2];
+            if (!isNaN(puly)) {
+                document.getElementById('name').value = name.toUpperCase();
+                if (hereket.includes('ber') || hereket.includes('ödä')) {
+                    document.getElementById('pay').value = puly;
+                    document.getElementById('debt').value = "";
+                } else if (hereket.includes('al') || hereket.includes('borç')) {
+                    document.getElementById('debt').value = puly;
+                    document.getElementById('pay').value = "";
+                }
+            }
+        }
+    };
+    recognition.onerror = () => btn.classList.remove('mic-active');
+    recognition.start();
+}
+
+function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.text("AMAN PRO HASABAT", 14, 20);
+    let y = 30;
+    customers.forEach((c, idx) => {
+        doc.text(`${idx + 1}. ${c.name} -> Toleg: ${c.pay} | Bergi: ${c.debt}`, 14, y);
+        y += 10;
+    });
+    doc.save("Aman_Pro.pdf");
+}
+
+function exportData() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(customers));
+    const dl = document.createElement('a');
+    dl.setAttribute("href", dataStr);
+    dl.setAttribute("download", "Aman_Pro_Backup.json");
+    dl.click();
+}
+
+function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        customers = JSON.parse(e.target.result);
+        saveAndRefresh();
+    };
+    reader.readAsText(file);
+}
+
+window.onload = function() {
+    saveAndRefresh();
+};
+</script>
 
 </body>
 </html>
